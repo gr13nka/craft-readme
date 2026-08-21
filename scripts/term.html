@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  /* The card carries its own dark ground, so its rounded corners can be cut
+     to transparency and it still reads as a terminal on any page behind it.
+     One Dark, so real coloured CLI output pasted into a transcript lands home. */
+  :root {
+    --bg: #282c34; --edge: #3e4451; --fg: #abb2bf;
+    --dot1: #ff5f57; --dot2: #febc2e; --dot3: #28c840;
+    --prompt: #98c379; --title: #7f848e;
+  }
+  html, body { margin: 0; background: transparent; }
+  #term {
+    display: inline-block; background: var(--bg); border: 1px solid var(--edge);
+    border-radius: 12px; overflow: hidden;
+    font: 14px/1.55 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--fg);
+  }
+  #bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--edge); }
+  #bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  #bar .d1 { background: var(--dot1); } #bar .d2 { background: var(--dot2); } #bar .d3 { background: var(--dot3); }
+  #bar.hidden { display: none; }
+  #title { margin-left: 8px; color: var(--title); font-size: 12.5px; }
+  #body { margin: 0; padding: 14px 16px; white-space: pre-wrap; word-break: break-word; }
+  .p { color: var(--prompt); }
+  .c { color: #d7dae0; font-weight: 600; }
+  .cur { background: var(--fg); color: var(--bg); }
+  .b { font-weight: 600; } .dim { opacity: .6; }
+</style>
+<div id="term"><div id="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span id="title"></span></div><pre id="body"></pre></div>

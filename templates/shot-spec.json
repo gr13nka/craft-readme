@@ -1,0 +1,15 @@
+{
+  "_": "Worked example: the Graveyard hero (a still) and the candle (a recording).",
+  "_hero": "Copy this block for a still. Delete the 'record' key for a screenshot.",
+  "serve": "../../../orca/projects/Graveyard",
+  "path": "/",
+  "viewport": { "width": 1600, "height": 800, "dsf": 2 },
+  "settle": 2200,
+  "steps": [
+    { "eval": "document.querySelector('.gy-scene').scrollTop = 630" },
+    { "click": "[aria-label*='TwinStickDraft']", "wait": 1400 },
+    { "hover": [478, 618], "wait": 500 }
+  ],
+  "radius": 16,
+  "out": "hero.png"
+}
