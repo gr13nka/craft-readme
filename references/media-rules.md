@@ -55,6 +55,15 @@ The transcript is `$ `-prefixed commands and their real output; never invent
 output — paste a real `--help` or a real short run.
 </terminal_card>
 
+<rendering_a_readme>
+A project whose output is a document should show that document. `readme-shot.mjs`
+renders a README the way GitHub does — chrome-free, on white — and screenshots it
+with transparent corners like any other image. For a restructure, a **before/after**
+(`--compare` for a still, `--wipe` for a GIF) shows the transformation in one glance;
+it is the most honest hero a README-cleanup produces. Badges and repo-relative images
+render because the page is served from the repo root with network on.
+</rendering_a_readme>
+
 <pushing>
 Committing a couple of MB of images can fail the push with
 `send-pack: unexpected disconnect while reading sideband packet` (an HTTP/2

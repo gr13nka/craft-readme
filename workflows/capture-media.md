@@ -41,6 +41,21 @@ A command-line tool.
 3. Animation: add `--animate --fps 15`. `--out …/cli.gif`.
 </cli>
 
+<readme_or_doc>
+A project whose output is a document — a README tool, a static-site or docs
+generator — or any before/after cleanup of a README itself.
+
+- Render a finished README as the hero: `node <skill>/scripts/readme-shot.mjs
+  README.md --out docs/images/readme.png`. It renders GitHub-style and resolves
+  repo-relative images; badges load over the network.
+- Show a restructure as a **before/after**: `--compare old.md new.md --out
+  docs/images/hero.png` for a side-by-side still, `--wipe old.md new.md --out
+  docs/images/demo.gif` for the transition. Fetch a pre-restructure README with
+  `git show <ref>:README.md` into the repo root so its relative paths resolve.
+- Keep the wipe narrow (`--width 680`) — a full-width render blows the GIF past
+  its budget.
+</readme_or_doc>
+
 <other>
 A desktop app, or a library with nothing to run.
 

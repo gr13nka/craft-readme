@@ -106,6 +106,7 @@ All in `templates/`:
 All in `scripts/`, run with `node`:
 - `capture.mjs spec.json [--probe "a,b"] [--set k=v]` — web page → PNG, or GIF/APNG if the spec has `record`
 - `term.mjs transcript.txt --out f.png [--animate --fps 15] [--title x]` — terminal card, still or animated
+- `readme-shot.mjs README.md --out f.png` (or `--compare a.md b.md`, `--wipe a.md b.md`) — render a README GitHub-style, or a before/after
 - `round.mjs in.png out.png [--radius 32]` (or `--batch in/ out/`) — cut transparent rounded corners
 - `encode.mjs frames/ out.gif|out.apng [--fps 20]` — frames → animation
 - `check-readme.mjs README.md --docs docs` — links, anchors, placeholders, image budgets, real commands

@@ -15,6 +15,9 @@ nothing true to say.
    - one plain sub-slogan line, ≤ 20 words, what it does
    - a links row: live demo · docs · anything else, ` · `-separated
    - the hero image, `<img … width="100%">`
+   - for a doc/README tool, a **before/after** render of a real README (a messy
+     spec beside the clean landing page) is a stronger hero than a screenshot —
+     see `references/media-rules.md`
 2. **Animated demo** — the GIF, `width="360"`–`480`, directly under the header
    so a reader who never scrolls still sees it. One or two sentences, by the
    bloat test below.

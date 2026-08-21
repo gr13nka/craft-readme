@@ -14,18 +14,18 @@ and captures the screenshots and GIFs itself, with no dependencies.
 
 **[How it works →](docs/GUIDE.md)**
 
-<img src="docs/images/hero.png" alt="A terminal running the capture and check scripts, ending in check-readme: clean" width="100%">
+<img src="docs/images/hero.png" alt="Before and after: a text-heavy spec-style README on the left, a short image-led landing page on the right" width="100%">
 
 </div>
 
 ## What it does
 
-<img src="docs/images/demo.gif" alt="The capture and check commands typed out, each printing its JSON summary" width="600">
+<img src="docs/images/demo.gif" alt="A spec-style README wiping across into a short, image-led one" width="600">
 
-It captures its own media over headless Chromium — no Playwright, no ffmpeg — cuts the
-corners to transparency so a shot sits on either GitHub theme, and encodes GIFs in pure
-Node. Then it moves every option table and schema out to `docs/GUIDE.md` and leaves the
-README short. [The full pipeline →](docs/GUIDE.md#the-capture-scripts)
+A wall-of-text README becomes a landing page: the options and schemas move to
+`docs/GUIDE.md`, and a hero screenshot and a short GIF go in — captured over headless
+Chromium, no Playwright and no ffmpeg, corners cut to transparency so a shot sits on either
+GitHub theme. [The full pipeline →](docs/GUIDE.md#the-capture-scripts)
 
 ## Use it with your agent
 
@@ -62,10 +62,10 @@ node scripts/check-readme.mjs README.md --docs docs      # dead links, placehold
 
 ## Example output
 
-A hero the skill captured — full-bleed, corners cut to transparency, straight from a
-running page:
+A README this made, rendered as GitHub shows it — centred header, real badges, a hero and a
+GIF, the reference detail moved out to a linked guide:
 
-<img src="docs/images/example-output.png" alt="A night-scene web app captured as a rounded, transparent-cornered hero image" width="100%">
+<img src="docs/images/example-output.png" alt="A rendered README: centred title, badge row, a hero screenshot, and the first section" width="100%">
 
 ## Docs
 
