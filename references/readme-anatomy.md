@@ -19,8 +19,7 @@ nothing true to say.
      spec beside the clean landing page) is a stronger hero than a screenshot —
      see `references/media-rules.md`
 2. **Animated demo** — the GIF, `width="360"`–`480`, directly under the header
-   so a reader who never scrolls still sees it. One or two sentences, by the
-   bloat test below.
+   so a reader who never scrolls still sees it. One line, or none — the GIF carries it.
 3. **Quick start with an agent** — one pasteable prompt in a blockquote. Names
    the repo, says "read CLAUDE.md first" if that file exists (else the guide),
    and names only commands that exist in the repo.
@@ -85,17 +84,25 @@ the anti-machine tells below hold in every register.
 - Concrete over abstract: "last touched in 2023" beats "long-abandoned".
 - A point of view — the tagline most of all. An opinion, not a description.
 
-Before → after, from real edits on this skill's own READMEs:
-- "It captures its own media over headless Chromium, cutting the corners to transparency so
-  a shot sits on either GitHub theme, and encodes GIFs in pure Node."
-  → "Captured over headless Chromium. No Playwright, no ffmpeg. Corners cut out so they sit
-  on either theme."
-- "Anyone visiting can light a candle at a grave, and it is still burning when they come
-  back. Candles live in that visitor's browser, so there is no count and nobody else's to
-  see."
-  → "Only you can see your candle, and there's no counter."
-- "**A README that shows the thing, not a spec that describes it.**" (a description)
-  → "*Nobody reads the wall of text. Show them the thing.*" (a tagline with a view)
+**Cut to the bone.** The shortest version that still carries the fact wins. A line that
+only adds flavour goes — even a good one, and especially under an image that already shows
+it. A section is allowed to be a visual, one bare line, and the link. When in doubt, leave
+it out.
+
+Real cuts, each the author's own final call — note that good lines got cut, not just weak
+ones:
+- Candle GIF caption: "Scroll a grave to the bottom and there's a candle. Light it before
+  the match burns down. It's still lit when you come back, only you can see it, and there's
+  no counter." → "Scroll a grave to the bottom and there's a candle." The GIF shows the
+  rest.
+- Agent section: "You have the repos. An agent has the free time. Open your fork in Claude
+  Code…" → "Open your fork in Claude Code…" The joke was fine; the instruction is the point.
+- "No server, no database, no build. The page commits to itself." → "No server, no
+  database, no build."
+
+And a register example — description to a tagline with a view:
+"A README that shows the thing, not a spec that describes it." → "Nobody reads the wall of
+text. Show them the thing."
 </voice>
 
 <relocation_rule>
