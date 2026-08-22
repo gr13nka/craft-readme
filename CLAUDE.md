@@ -57,14 +57,19 @@ animation — `du -h` block-rounding lies. `check-coverage.mjs` matches exact su
 reworded line during a move flags as "lost"; that is expected — verify the fact survives and
 pass `--allow`.
 
-**Voice is part of the skill.** The READMEs it writes — and this repo's own — follow the
-`<voice>` section of `references/readme-anatomy.md`: terse, no rule-of-three / em-dash-aside
-/ balanced-antithesis tells. Hold to it when editing the skill's docs too.
+**Voice is part of the skill.** The READMEs it writes, and this repo's own, follow
+`references/voice.md`: the bash.org register, terse and deadpan, the sarcasm aimed at
+ceremony and never at the reader, no joke ever labelled, none of the machine tells.
+`scripts/check-voice.mjs` lints the lexical tells (marketing words, softeners, boilerplate,
+emoji, winks) as errors and the structural ones (em-dash aside, rule of three, antithesis,
+rhythm) as warnings a writer decides. Hold to it when editing the skill's docs too.
 
 ## Verify
 
-No test suite. `node --check scripts/*.mjs`, then run the skill's own gate on itself:
-`node scripts/check-readme.mjs README.md --docs docs`. Smoke-test a capture against any
+No test suite. `node --check scripts/*.mjs`, then run the skill's own gates on itself:
+`node scripts/check-readme.mjs README.md --docs docs` and `node scripts/check-voice.mjs
+README.md`. When touching `check-voice.mjs`, feed it a deliberately machine-written
+paragraph and confirm each list still fires. Smoke-test a capture against any
 served local site before trusting a change to `capture.mjs`/`readme-shot.mjs`.
 
 ## Pushing

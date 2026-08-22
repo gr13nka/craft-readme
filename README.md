@@ -13,20 +13,20 @@
 
 </div>
 
-Most READMEs are the same wall of text. Setup steps, an options table nobody opens, and not
-one picture of the thing running.
+Most READMEs are the same wall of text. Setup steps, an options table nobody opens, not one
+picture of the thing running.
 
 craft-readme cuts it down to a landing page. A screenshot, a short GIF, a quick start. The
-reference goes in a guide behind a link. It's a Claude Code skill, and it takes its own
+reference goes in a guide behind a link. It's a Claude Code skill. It takes its own
 screenshots.
 
 ## What it does
 
 <img src="docs/images/demo.gif" alt="A spec-style README wiping across into a short, image-led one" width="600">
 
-The options and schemas move to `docs/GUIDE.md`. A hero shot and a GIF go in, both captured
-over headless Chromium — no Playwright, no ffmpeg — with the corners cut out so they sit on
-either GitHub theme. [The full pipeline →](docs/GUIDE.md#the-capture-scripts)
+The options and schemas move to `docs/GUIDE.md`. A hero shot and a GIF go in, captured over
+headless Chromium with the corners cut out so they sit on either GitHub theme.
+[The full pipeline →](docs/GUIDE.md#the-capture-scripts)
 
 ## Use it with your agent
 
@@ -58,6 +58,7 @@ node scripts/capture.mjs spec.json                        # web page → rounded
 node scripts/term.mjs run.txt --out cli.png --title app   # a transcript → terminal card
 node scripts/readme-shot.mjs README.md --out readme.png   # a README → how GitHub shows it
 node scripts/check-readme.mjs README.md --docs docs       # dead links, placeholders, budgets
+node scripts/check-voice.mjs README.md                    # "seamlessly", emoji, the wink in parentheses
 ```
 
 ## Example output
@@ -82,10 +83,13 @@ the corners.
 **Will it eat my docs?** No. They move to `docs/GUIDE.md` word for word, and a check proves
 nothing dropped out.
 
+**Will it read like a bot wrote it?** There's a check for that. Emoji, "seamlessly", "feel
+free to", "pro tip", the joke in parentheses all fail it. What passes is dry.
+
 ## Docs
 
 The rest is in **[docs/GUIDE.md](docs/GUIDE.md)**:
-[install](docs/GUIDE.md#install) · [the capture scripts](docs/GUIDE.md#the-capture-scripts) · [the spec format](docs/GUIDE.md#the-shot-spec) · [the checks](docs/GUIDE.md#the-checks).
+[install](docs/GUIDE.md#install) · [the capture scripts](docs/GUIDE.md#the-capture-scripts) · [the spec format](docs/GUIDE.md#the-shot-spec) · [the checks](docs/GUIDE.md#the-checks) · [the voice](docs/GUIDE.md#the-voice).
 
 ## License
 

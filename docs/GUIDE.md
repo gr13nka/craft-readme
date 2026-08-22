@@ -1,7 +1,7 @@
 # craft-readme — the full guide
 
 Everything the [README](../README.md) leaves out: how the skill routes, what each
-capture script does, and the two checks that keep the output honest.
+capture script does, the three checks that keep the output honest, and the voice.
 
 - [Install](#install)
 - [How the skill works](#how-the-skill-works)
@@ -9,6 +9,7 @@ capture script does, and the two checks that keep the output honest.
 - [The shot spec](#the-shot-spec)
 - [The terminal card](#the-terminal-card)
 - [The checks](#the-checks)
+- [The voice](#the-voice)
 - [What it enforces](#what-it-enforces)
 - [Requirements](#requirements)
 
@@ -23,17 +24,18 @@ available in any session. The scripts also run standalone from anywhere with `no
 
 ## How the skill works
 
-It is a router. `SKILL.md` asks one question — build a whole README, capture media only,
-or tighten existing prose — and hands to one of three workflows:
+It is a router. `SKILL.md` hands to one of three workflows: build by default on an
+explicit `/craft-readme`, and it asks which only when it auto-triggered from a README
+mention:
 
 - **build-readme** — audit the repo, storyboard the shots, capture them, write `README.md`
   and `docs/GUIDE.md`, verify, hand off.
 - **capture-media** — the media path on its own (web, CLI, or user-supplied).
-- **tighten-prose** — the bloat pass over an existing README.
+- **tighten-prose** — the bloat pass, then the voice pass, over an existing README.
 
 The reference files (`references/`) carry the durable knowledge: the section order and
-word budgets, the badge truth conditions, the media rules, and the capture traps. The
-skill never commits — it ends by pointing at `/finish-session`.
+word budgets, the voice, the badge truth conditions, the media rules, and the capture
+traps. The skill never commits — it ends by pointing at `/finish-session`.
 
 ## The capture scripts
 
@@ -47,6 +49,7 @@ All in `scripts/`, zero-dependency Node, run with `node` alone.
 | `encode.mjs frames/ out.gif` | frames → GIF or APNG, ffmpeg-free |
 | `check-readme.mjs` | fails on dead links, broken anchors, placeholders, oversized images |
 | `check-coverage.mjs` | proves a restructure moved prose verbatim |
+| `check-voice.mjs` | fails on the vocabulary and the winks that mark prose as machine-written; warns on the structural tells |
 | `serve.mjs dir` | a zero-dependency static server, used internally and standalone |
 
 The GIF encoder is pure Node — a median-cut palette (255 colours plus a transparent
@@ -106,6 +109,7 @@ still read as a terminal on any page. Never invent output — paste a real run o
 ```bash
 node scripts/check-readme.mjs README.md --docs docs
 node scripts/check-coverage.mjs --old <(git show HEAD:README.md) --new README.md --new docs/GUIDE.md
+node scripts/check-voice.mjs README.md
 ```
 
 `check-readme` fails, with the exact line, on: a relative link or image whose target is
@@ -117,6 +121,26 @@ names a repo file which is not there.
 `check-coverage` takes every substantial line of the old README and checks it survives
 somewhere in the new files, so a restructure cannot paraphrase content away. Pass `--allow`
 for the lines you meant to drop.
+
+`check-voice` reads the prose only (fenced code, inline code, quoted mentions, HTML, URLs
+and badges are skipped) and reports each hit with its line. Errors: marketing adjectives (`powerful`,
+`seamless`, `lightweight`, `leverage`), softeners (`simply`, `easily`, `with ease`),
+connective tissue (`whether you're`, `designed to`, `making it easy to`, `additionally`),
+boilerplate (`Welcome to`, `Feel free to`, `Happy coding`, `Contributions are welcome`),
+emoji, exclamation marks, a bold-lead-in features list, a `Why X?` heading, and the winks
+(`(yes, really)`, `spoiler alert`, `pro tip`, `™`, `/s`). Warnings: an em-dash, a
+semicolon, a rule-of-three list, "not X, but Y", a participial payoff, three sentences of
+one length, three sentences opening on one word, a Title Case heading. Errors fail it;
+`--strict` makes warnings fail too. The full lists are the script's first hundred lines.
+
+## The voice
+
+`references/voice.md`. The register is bash.org: terse, deadpan, the sarcasm aimed at the
+wall-of-text README and the options table nobody opens, never at the reader. The skill
+writes every section flat and then leaves bare the one fact per screen that is already
+funny. It never adds a joke and never labels one. The slogan is an opinion. An FAQ of
+one-line literal answers is allowed. The reference carries the mechanics, the full list of
+machine tells, section-scale rewrites, and the author's own cuts.
 
 ## What it enforces
 

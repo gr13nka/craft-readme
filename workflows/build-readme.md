@@ -3,8 +3,9 @@
 <required_reading>
 Read these now:
 1. references/readme-anatomy.md
-2. references/badges.md
-3. references/media-rules.md
+2. references/voice.md
+3. references/badges.md
+4. references/media-rules.md
 </required_reading>
 
 <process>
@@ -63,6 +64,12 @@ The animated demo goes directly under the header. Fill the agent quick-start
 block with real commands (it drives an agent, so it names files); the manual
 quick-start is the fewest commands that reach a running thing. The Docs section
 links the guide and 2–4 anchors. Every sentence passes the bloat test.
+
+Write in the register of references/voice.md: every section flat first, bare
+facts, sentence-case headings, no marketing word, no emoji, no exclamation mark.
+Then find the one fact per screen that is already funny and leave it bare. Do
+not add a joke and never label one. The slogan is an opinion. If the project
+invites sceptical questions, an FAQ of one-line literal answers is the place.
 </step_7>
 
 <step_8 name="Tighten">
@@ -71,6 +78,8 @@ Follow `workflows/tighten-prose.md`, then return here.
 
 <step_9 name="Verify">
 - `node <skill>/scripts/check-readme.mjs README.md --docs docs` → exit 0
+- `node <skill>/scripts/check-voice.mjs README.md` → exit 0; every warning a
+  stated call, not a silent pass
 - restructure only: `node <skill>/scripts/check-coverage.mjs --old <(git show
   HEAD:README.md) --new README.md --new docs/GUIDE.md --allow "<each deliberate
   drop>"` → exit 0
@@ -91,6 +100,6 @@ document, verify and commit. This skill does not commit.
 - README ≤ ~100 lines, sections in the canonical order, animated demo under the header
 - at least one still and one animation in `docs/images/`, transparent corners, within budget
 - full reference content lives in `docs/GUIDE.md`, reached by anchor links
-- check-readme clean; check-coverage clean in restructure mode
+- check-readme and check-voice clean; check-coverage clean in restructure mode
 - nothing committed; the closing message points at /finish-session
 </success_criteria>

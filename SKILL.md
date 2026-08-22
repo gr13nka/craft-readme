@@ -1,6 +1,6 @@
 ---
 name: craft-readme
-description: Rebuilds a project's README as a short, image-led landing page — a big header with true badges, a slogan, a rounded screenshot and a small animated demo, an agent quick-start and a manual one, with all reference detail moved out to docs/GUIDE.md behind anchor links. Captures the screenshots and GIFs itself (headless web pages, or a terminal card for CLIs) with zero dependencies. Use when the user says "write / polish / redo the README", "the README is bloated / too long / daunting", "add a screenshot or GIF to the README", "make the readme look nice", or invokes /craft-readme. Not for running or screenshotting an app to verify a change (that is the run skill), driving desktop apps (computer-use), Orca's embedded browser (orca-cli), or routine end-of-session README touch-ups (finish-session, which edits a README only when setup or commands changed — this skill is the full rewrite).
+description: Rebuilds a project's README as a short, image-led landing page: header with true badges, a slogan, a rounded screenshot and a short GIF, an agent quick-start and a manual one, all reference detail moved to docs/GUIDE.md behind anchor links. Captures the screenshots and GIFs itself (headless web pages, or a terminal card for CLIs) with zero dependencies, and writes dry, deadpan bash.org-register prose with the LLM tells stripped and linted. Use when the user says "write / polish / redo the README", "the README is bloated / too long / daunting", "the README sounds AI-written / like ChatGPT / too corporate, make it sound human", "add a screenshot or GIF to the README", "make the readme look nice", or invokes /craft-readme. Not for running or screenshotting an app to verify a change (the run skill), driving desktop apps (computer-use), Orca's embedded browser (orca-cli), or routine end-of-session README touch-ups (finish-session edits a README only when setup or commands changed; this skill is the full rewrite).
 ---
 
 <objective>
@@ -46,9 +46,11 @@ theme, whichever it is. Check on white and on `#0d1117`.
 **Never commit.** End by listing changed files and pointing at `/finish-session`.
 
 **Voice is part of the job.** A README that reads as machine-written undoes the rest of the
-work. Write terse and human — short declaratives, a point of view, none of the rule-of-
-three / em-dash-aside / balanced-antithesis tells. The register is the author's to set; the
-anti-machine tells in `references/readme-anatomy.md` hold regardless.
+work. The register is bash.org. Terse and deadpan. The sarcasm aims at software ceremony,
+never at the reader. The punchline is a plain fact, found in what is already true, not
+added, and never labelled with a wink. No marketing word, no emoji, no exclamation mark.
+`references/voice.md` has the mechanics and the tells; `scripts/check-voice.mjs` fails on
+the ones a regex can hold. Run it before saying done.
 </essential_principles>
 
 <context>
@@ -85,6 +87,7 @@ Wait for the answer before proceeding.
 | explicit invocation, or "build / rewrite / redo / make it nice" | `workflows/build-readme.md` (the default) |
 | "screenshot", "gif", "capture", "add an image" only | `workflows/capture-media.md` |
 | "tighten", "bloated", "too long", "trim" only | `workflows/tighten-prose.md` |
+| "sounds AI-written / like an LLM / too corporate", "make it sound human" | `workflows/tighten-prose.md` |
 
 **After reading the workflow, follow it exactly.**
 </routing>
@@ -94,12 +97,13 @@ Wait for the answer before proceeding.
 |---|---|
 | build-readme.md | Audit → storyboard → capture → write README + GUIDE → verify → hand off |
 | capture-media.md | Web (capture.mjs), CLI (term.mjs), or user-supplied (round.mjs) media |
-| tighten-prose.md | The bloat pass on an existing README |
+| tighten-prose.md | The bloat pass, then the voice pass, on an existing README |
 </workflows_index>
 
 <reference_index>
 All in `references/`:
 - readme-anatomy.md — section order, word budgets, the prose rules, before/after examples
+- voice.md — the bash.org register, the machine tells, worked rewrites, the author's cuts
 - badges.md — shields URLs and the truth condition for each badge
 - media-rules.md — transparent corners, sizes, GIF vs APNG, formats GitHub renders, the push trick
 - capture-traps.md — what the scripts handle for you, and the knobs you still own
@@ -121,6 +125,7 @@ All in `scripts/`, run with `node`:
 - `encode.mjs frames/ out.gif|out.apng [--fps 20]` — frames → animation
 - `check-readme.mjs README.md --docs docs` — links, anchors, placeholders, image budgets, real commands
 - `check-coverage.mjs --old old.md --new README.md --new docs/GUIDE.md [--allow pat]` — nothing lost in a move
+- `check-voice.mjs README.md [--strict]` — the machine tells: marketing words, softeners, boilerplate, emoji, winks; warns on em-dashes, triplets, antithesis, rhythm
 - `serve.mjs dir [--port N]` — zero-dep static server (also used internally)
 </scripts_index>
 
@@ -128,12 +133,13 @@ All in `scripts/`, run with `node`:
 A terse pre-flight, drawn from the principles above plus two things they do not say:
 - Persist the HTTP/1.1 push flags to git config — they are per-command only.
 - Invent terminal output for a CLI card — paste a real run or `--help`.
+- Add a joke, or label one. The register leaves a true fact bare; it never decorates.
 </never>
 
 <success_criteria>
 - README ≤ ~100 lines, canonical section order, animated demo under the header
 - ≥ 1 still and 1 animation in `docs/images/`, transparent corners, within budget
 - all reference detail in `docs/GUIDE.md`, reached by anchor links
-- `check-readme` clean; `check-coverage` clean when restructuring
+- `check-readme` and `check-voice` clean; `check-coverage` clean when restructuring
 - nothing committed; the closing message points at `/finish-session`
 </success_criteria>

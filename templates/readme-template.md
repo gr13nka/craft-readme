@@ -8,6 +8,7 @@
 [![live](https://img.shields.io/badge/live-{{host}}-6f6ac4?style=flat-square)]({{live-url}})
 [![license {{SPDX}}](https://img.shields.io/badge/license-{{SPDX}}-6f6ac4?style=flat-square)](LICENSE)
 
+<!-- the slogan has an opinion and usually a verb; a description is not a slogan. references/voice.md -->
 **{{Slogan — what it is, ≤ 8 words}}**
 
 {{One plain line — what it does, ≤ 20 words.}}
@@ -44,6 +45,11 @@
 <img src="docs/images/{{shot}}.png" alt="{{alt}}" width="100%">
 
 {{≤ 3 lines.}} [{{More →}}](docs/GUIDE.md#{{anchor}})
+
+## FAQ
+
+<!-- optional: 3–5 questions a sceptic actually asks, each answered in one line with the literal fact. Never "Why another X?". -->
+**{{Sceptic's question?}}** {{The literal answer, one line.}}
 
 ## Docs
 

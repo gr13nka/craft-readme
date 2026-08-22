@@ -26,9 +26,12 @@ nothing true to say.
 4. **Quick start** (manual) — the fewest commands that reach a running thing.
 5. **One or two feature sections** — each a still or a command, ≤ 3 lines, and
    an anchor link into the guide for the detail.
-6. **Docs** — a line linking `docs/GUIDE.md`, plus 2–4 anchor links to the
+6. **FAQ** (optional) — 3–5 questions a sceptic actually asks, each answered in
+   one line with the literal fact. The register's best room (`references/voice.md`).
+   Never "Why another X?"; that is the machine's question, not the reader's.
+7. **Docs** — a line linking `docs/GUIDE.md`, plus 2–4 anchor links to the
    sections a reader is most likely to want.
-7. **License** — one line; name the licence and any credit.
+8. **License** — one line; name the licence and any credit.
 </section_order>
 
 <prose_rules>
@@ -62,47 +65,11 @@ punctuation, spaces → hyphens. `check-readme.mjs` verifies every `#anchor`.
 </prose_rules>
 
 <voice>
-Structure keeps a reader on the page; voice is why the writing does not read as machine-
-generated once they are there. Default to a terse, dry register — a competent developer
-typing, not marketing copy. The author can change the register (cosy, formal, playful);
-the anti-machine tells below hold in every register.
-
-**Cut these — they are the tells that read as LLM-written:**
-- **Rule-of-three lists.** "a screenshot, a short GIF, and a quick start", three to a
-  paragraph. Break them — use two, or four, or a fragment.
-- **The em-dash appositive.** "each grave — the years, the epitaph, the cause — then…".
-  A period almost always does the job.
-- **Balanced antithesis.** "It's not X, it's Y." "not golfed, necessary." Pick a side.
-- **Explaining the payoff.** State the thing and stop. Drop the trailing "…which is what
-  makes it clean." The reader already got it.
-- **Uniform rhythm.** Every sentence the same medium length reads composed. Vary hard: a
-  four-word sentence beside a long one. Fragments are fine.
-
-**Reach for these instead:**
-- Short declaratives. Periods over dashes and semicolons.
-- Understatement, the occasional anticlimax. The joke is that it is true and flat.
-- Concrete over abstract: "last touched in 2023" beats "long-abandoned".
-- A point of view — the tagline most of all. An opinion, not a description.
-
-**Cut to the bone.** The shortest version that still carries the fact wins. A line that
-only adds flavour goes — even a good one, and especially under an image that already shows
-it. A section is allowed to be a visual, one bare line, and the link. When in doubt, leave
-it out.
-
-Real cuts, each the author's own final call — note that good lines got cut, not just weak
-ones:
-- Candle GIF caption: "Scroll a grave to the bottom and there's a candle. Light it before
-  the match burns down. It's still lit when you come back, only you can see it, and there's
-  no counter." → "Scroll a grave to the bottom and there's a candle." The GIF shows the
-  rest.
-- Agent section: "You have the repos. An agent has the free time. Open your fork in Claude
-  Code…" → "Open your fork in Claude Code…" The joke was fine; the instruction is the point.
-- "No server, no database, no build. The page commits to itself." → "No server, no
-  database, no build."
-
-And a register example — description to a tagline with a view:
-"A README that shows the thing, not a spec that describes it." → "Nobody reads the wall of
-text. Show them the thing."
+The register and the machine tells are in `references/voice.md`. Read it before writing a
+line. The short form: bash.org. Terse, deadpan, the sarcasm aimed at software ceremony and
+never at the reader, the punchline a plain fact, no joke ever labelled. Write every section
+flat first; leave bare the one fact per screen that is already funny. The slogan carries an
+opinion. `scripts/check-voice.mjs` fails on the vocabulary and the winks.
 </voice>
 
 <relocation_rule>
