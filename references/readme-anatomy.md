@@ -62,6 +62,42 @@ and a concrete noun. Never "click here" or a bare URL.
 punctuation, spaces → hyphens. `check-readme.mjs` verifies every `#anchor`.
 </prose_rules>
 
+<voice>
+Structure keeps a reader on the page; voice is why the writing does not read as machine-
+generated once they are there. Default to a terse, dry register — a competent developer
+typing, not marketing copy. The author can change the register (cosy, formal, playful);
+the anti-machine tells below hold in every register.
+
+**Cut these — they are the tells that read as LLM-written:**
+- **Rule-of-three lists.** "a screenshot, a short GIF, and a quick start", three to a
+  paragraph. Break them — use two, or four, or a fragment.
+- **The em-dash appositive.** "each grave — the years, the epitaph, the cause — then…".
+  A period almost always does the job.
+- **Balanced antithesis.** "It's not X, it's Y." "not golfed, necessary." Pick a side.
+- **Explaining the payoff.** State the thing and stop. Drop the trailing "…which is what
+  makes it clean." The reader already got it.
+- **Uniform rhythm.** Every sentence the same medium length reads composed. Vary hard: a
+  four-word sentence beside a long one. Fragments are fine.
+
+**Reach for these instead:**
+- Short declaratives. Periods over dashes and semicolons.
+- Understatement, the occasional anticlimax. The joke is that it is true and flat.
+- Concrete over abstract: "last touched in 2023" beats "long-abandoned".
+- A point of view — the tagline most of all. An opinion, not a description.
+
+Before → after, from real edits on this skill's own READMEs:
+- "It captures its own media over headless Chromium, cutting the corners to transparency so
+  a shot sits on either GitHub theme, and encodes GIFs in pure Node."
+  → "Captured over headless Chromium. No Playwright, no ffmpeg. Corners cut out so they sit
+  on either theme."
+- "Anyone visiting can light a candle at a grave, and it is still burning when they come
+  back. Candles live in that visitor's browser, so there is no count and nobody else's to
+  see."
+  → "Only you can see your candle, and there's no counter."
+- "**A README that shows the thing, not a spec that describes it.**" (a description)
+  → "*Nobody reads the wall of text. Show them the thing.*" (a tagline with a view)
+</voice>
+
 <relocation_rule>
 When an existing README is being slimmed, text that moves to the guide **moves
 verbatim** — this is a relocation, not a rewrite, because the old prose was

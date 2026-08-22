@@ -13,33 +13,31 @@
 
 </div>
 
-Every project ends up with the same README: a wall of setup steps, an options table nobody
-scrolls to, and no picture of the thing actually running. craft-readme tears that down to a
-landing page — a hero shot, a short GIF, a quick start — and files the reference behind a
-link, where it belongs.
+Most READMEs are the same wall of text. Setup steps, an options table nobody opens, and not
+one picture of the thing running.
 
-It's a Claude Code skill, and it captures its own media. No dependencies.
+craft-readme cuts it down to a landing page. A screenshot, a short GIF, a quick start. The
+reference goes in a guide behind a link. It's a Claude Code skill, and it takes its own
+screenshots.
 
 ## What it does
 
 <img src="docs/images/demo.gif" alt="A spec-style README wiping across into a short, image-led one" width="600">
 
-The options and schemas move to `docs/GUIDE.md`; a hero screenshot and a short GIF go in.
-Everything is captured over headless Chromium — no Playwright, no ffmpeg — with the corners
-cut to transparency so a shot sits on either GitHub theme.
-[The full pipeline →](docs/GUIDE.md#the-capture-scripts)
+The options and schemas move to `docs/GUIDE.md`. A hero shot and a GIF go in, both captured
+over headless Chromium — no Playwright, no ffmpeg — with the corners cut out so they sit on
+either GitHub theme. [The full pipeline →](docs/GUIDE.md#the-capture-scripts)
 
 ## Use it with your agent
 
-In Claude Code, from the project whose README you want:
+In Claude Code, from the project you want a README for:
 
 ```
 /craft-readme
 ```
 
-It reads the repo, proposes the shots, captures them, writes `README.md` and
-`docs/GUIDE.md`, checks every link and image, and hands off to `/finish-session`. It won't
-commit behind your back.
+It reads the repo, picks the shots, takes them, writes the README and the guide, checks the
+links and images, and stops. You commit.
 
 ## Install
 
@@ -49,44 +47,44 @@ Clone it where Claude Code keeps skills:
 git clone https://github.com/gr13nka/craft-readme ~/.claude/skills/craft-readme
 ```
 
-Node 22+ (for the built-in WebSocket) and any Chromium-based browser. Nothing to
-`npm install`, because there is nothing to install.
+Node 22+ and any Chromium browser. No `npm install`, there's nothing to install.
 
 ## Run the scripts directly
 
-Every tool works on its own, outside the skill:
+The tools work on their own, without the skill:
 
 ```bash
 node scripts/capture.mjs spec.json                        # web page → rounded PNG, or GIF
 node scripts/term.mjs run.txt --out cli.png --title app   # a transcript → terminal card
-node scripts/readme-shot.mjs README.md --out readme.png   # a README → the way GitHub shows it
+node scripts/readme-shot.mjs README.md --out readme.png   # a README → how GitHub shows it
 node scripts/check-readme.mjs README.md --docs docs       # dead links, placeholders, budgets
 ```
 
 ## Example output
 
-A README this made, rendered as GitHub shows it — centred header, real badges, a hero and a
-GIF, the reference moved out to a linked guide:
+A README this made, rendered how GitHub shows it. Centred header, real badges, a hero and a
+GIF, the rest moved to a linked guide:
 
 <img src="docs/images/example-output.png" alt="A rendered README: centred title, badge row, a hero screenshot, and the first section" width="100%">
 
 ## FAQ
 
-**Does it need Playwright or ffmpeg?** No. Node 22 ships a WebSocket, and that's the whole
-dependency list. The GIFs are encoded in pure Node.
+**Playwright? ffmpeg?** Neither. Node 22 has a WebSocket, that's the dependency list. GIFs
+are encoded in plain Node.
 
-**Can it show my README before I push it?** Yes — it renders the local file. GitHub never
-has to see it first.
+**Can it render my README before I push?** Yes. It reads the local file. GitHub doesn't
+need to see it first.
 
-**No screenshots in my project?** It makes them: web pages driven headless, CLIs as a
-terminal card, and for anything else, one shot you hand over gets its corners rounded.
+**My project has no screenshots.** It makes them. Web pages get driven in a headless
+browser, CLIs get a terminal card, and anything else, you hand it one image and it rounds
+the corners.
 
-**Will it mangle my docs?** No. It moves them into `docs/GUIDE.md` verbatim and runs a
-coverage check to prove nothing fell out.
+**Will it eat my docs?** No. They move to `docs/GUIDE.md` word for word, and a check proves
+nothing dropped out.
 
 ## Docs
 
-Everything else is in **[docs/GUIDE.md](docs/GUIDE.md)**:
+The rest is in **[docs/GUIDE.md](docs/GUIDE.md)**:
 [install](docs/GUIDE.md#install) · [the capture scripts](docs/GUIDE.md#the-capture-scripts) · [the spec format](docs/GUIDE.md#the-shot-spec) · [the checks](docs/GUIDE.md#the-checks).
 
 ## License

@@ -44,6 +44,11 @@ theme, whichever it is. Check on white and on `#0d1117`.
 `references/badges.md`; verify it, never hand-write a status.
 
 **Never commit.** End by listing changed files and pointing at `/finish-session`.
+
+**Voice is part of the job.** A README that reads as machine-written undoes the rest of the
+work. Write terse and human — short declaratives, a point of view, none of the rule-of-
+three / em-dash-aside / balanced-antithesis tells. The register is the author's to set; the
+anti-machine tells in `references/readme-anatomy.md` hold regardless.
 </essential_principles>
 
 <context>
