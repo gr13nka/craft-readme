@@ -62,24 +62,29 @@ as `<skill>/scripts/NAME` — substitute this skill's own directory for `<skill>
 </context>
 
 <intake>
-Ask the user:
+**Default to acting, not asking.** When the skill was invoked explicitly — the
+`/craft-readme` command, or a direct "use craft-readme / write the README with this" —
+go straight to `workflows/build-readme.md` and build it: create the README if there is
+none, rewrite it if there is. Make the routine calls yourself and state them; do not ask
+the intake question, and do not pause for storyboard approval. Route elsewhere only when
+the request itself is explicitly narrower — "just capture a GIF" → `capture-media`, "just
+tighten the prose" → `tighten-prose`.
 
-What would you like to do?
-1. Build or rebuild a README (the whole thing)
-2. Capture screenshots / a GIF only
-3. Tighten an existing README's prose
-4. Something else
+**Ask only when the skill auto-triggered** — it fired from a README mention in
+conversation rather than an explicit request. Then confirm intent first:
 
-**Wait for the answer before proceeding.**
+> What would you like — (1) build/rebuild the whole README, (2) capture screenshots or a
+> GIF only, (3) tighten the existing prose? I'll otherwise rebuild it.
+
+Wait for the answer before proceeding.
 </intake>
 
 <routing>
-| Answer | Workflow |
+| Situation | Workflow |
 |---|---|
-| 1, "build", "rewrite", "redo", "make it nice", bare /craft-readme | `workflows/build-readme.md` |
-| 2, "screenshot", "gif", "capture", "add an image" | `workflows/capture-media.md` |
-| 3, "tighten", "bloated", "too long", "trim" | `workflows/tighten-prose.md` |
-| 4 | clarify, then pick one |
+| explicit invocation, or "build / rewrite / redo / make it nice" | `workflows/build-readme.md` (the default) |
+| "screenshot", "gif", "capture", "add an image" only | `workflows/capture-media.md` |
+| "tighten", "bloated", "too long", "trim" only | `workflows/tighten-prose.md` |
 
 **After reading the workflow, follow it exactly.**
 </routing>

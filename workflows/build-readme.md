@@ -30,11 +30,14 @@ like an options table or a schema), this is a **restructure**, not a fresh write
 - repoint any "documented in README.md" pointers in CLAUDE.md or other docs
 </step_2>
 
-<step_3 name="Storyboard, then get approval">
-Propose the media as one line each — "hero: the yard with a grave lit and its
-panel open", "GIF: a candle being lit", "second still: the ?edit form". Use
-AskUserQuestion: approve / adjust / "I'll supply the media". Capture nothing
-until this is settled — a capture the user did not want is wasted minutes.
+<step_3 name="Storyboard">
+Decide the media as one line each — "hero: the yard with a grave lit and its
+panel open", "GIF: a candle being lit", "second still: the ?edit form".
+
+On an **explicit** invocation, state the plan in one line and go — do not stop
+for approval. On an **auto-triggered** run, confirm it first with
+AskUserQuestion (approve / adjust / "I'll supply the media"), since the user did
+not ask for this outright. Either way, capture nothing the plan does not name.
 </step_3>
 
 <step_4 name="Capture the media">
