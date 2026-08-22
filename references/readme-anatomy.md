@@ -11,7 +11,8 @@ nothing true to say.
 1. **Centred header** — `<div align="center"> … </div>`:
    - optional mark (a repo-relative SVG/PNG at ~72px), then `# Name`
    - badge row (see `references/badges.md`) — only true ones
-   - **bold slogan**, ≤ 8 words, what it is in one breath
+   - **bold slogan**, ≤ 8 words, what it is in one breath — an opinion in deadpan
+     and quiet, category + mechanism in plain
    - one plain sub-slogan line, ≤ 20 words, what it does
    - a links row: live demo · docs · anything else, ` · `-separated
    - the hero image, `<img … width="100%">`
@@ -26,9 +27,10 @@ nothing true to say.
 4. **Quick start** (manual) — the fewest commands that reach a running thing.
 5. **One or two feature sections** — each a still or a command, ≤ 3 lines, and
    an anchor link into the guide for the detail.
-6. **FAQ** (optional) — 3–5 questions a sceptic actually asks, each answered in
-   one line with the literal fact. The register's best room (`references/voice.md`).
-   Never "Why another X?"; that is the machine's question, not the reader's.
+6. **FAQ** (optional) — 3–5 questions a sceptic actually asks. Deadpan answers
+   each in one line with the literal fact (that register's best room); plain and
+   quiet answer fully, the limit conceded. Never "Why another X?"; that is the
+   machine's question, not the reader's.
 7. **Docs** — a line linking `docs/GUIDE.md`, plus 2–4 anchor links to the
    sections a reader is most likely to want.
 8. **License** — one line; name the licence and any credit.
@@ -65,11 +67,14 @@ punctuation, spaces → hyphens. `check-readme.mjs` verifies every `#anchor`.
 </prose_rules>
 
 <voice>
-The register and the machine tells are in `references/voice.md`. Read it before writing a
-line. The short form: bash.org. Terse, deadpan, the sarcasm aimed at software ceremony and
-never at the reader, the punchline a plain fact, no joke ever labelled. Write every section
-flat first; leave bare the one fact per screen that is already funny. The slogan carries an
-opinion. `scripts/check-voice.mjs` fails on the vocabulary and the winks.
+Three registers over one core, in `references/voice.md`. Read it before writing a line and
+pick the register first (`<choosing_the_register>`): plain for a library or CLI used by
+strangers or anything formal, and when nothing decides; deadpan for a dev tool with a
+thesis; quiet for an app a person lives with. Write every section flat; then the register's
+one move. Deadpan leaves bare the fact that is already funny, plain licenses each claim with
+a number and concedes the limit, quiet states the consequence and withholds the jab. The
+README declares it on line 1: `<!-- craft-readme: voice=quiet -->`. `scripts/check-voice.mjs`
+reads the marker and lints to it.
 </voice>
 
 <relocation_rule>

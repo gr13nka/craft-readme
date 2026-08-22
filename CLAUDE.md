@@ -58,18 +58,24 @@ reworded line during a move flags as "lost"; that is expected — verify the fac
 pass `--allow`.
 
 **Voice is part of the skill.** The READMEs it writes, and this repo's own, follow
-`references/voice.md`: the bash.org register, terse and deadpan, the sarcasm aimed at
-ceremony and never at the reader, no joke ever labelled, none of the machine tells.
-`scripts/check-voice.mjs` lints the lexical tells (marketing words, softeners, boilerplate,
-emoji, winks) as errors and the structural ones (em-dash aside, rule of three, antithesis,
-rhythm) as warnings a writer decides. Hold to it when editing the skill's docs too.
+`references/voice.md`: three registers (plain, deadpan, quiet) over one core, none of the
+machine tells, no emoji, no `!`, no labelled joke. A README declares its register on line 1
+(`<!-- craft-readme: voice=deadpan -->`). `scripts/check-voice.mjs` reads the marker
+(`--voice` overrides; no marker → plain) and applies that register's `PROFILES` entry:
+overrides keyed by rule key (`skip`, `warn`, `licensed`, `density`, `extra`) on the base
+rules, which are the full set. Every finding goes through one `add()`, so an override reaches
+the word-list rules and the inline checks alike. **Rule keys are unique and are the ids
+printed; keep them unique when adding a row.** This repo's own docs are deadpan; hold to it
+when editing them.
 
 ## Verify
 
 No test suite. `node --check scripts/*.mjs`, then run the skill's own gates on itself:
 `node scripts/check-readme.mjs README.md --docs docs` and `node scripts/check-voice.mjs
-README.md`. When touching `check-voice.mjs`, feed it a deliberately machine-written
-paragraph and confirm each list still fires. Smoke-test a capture against any
+README.md` (the header must read `(deadpan)`, from the marker). When touching
+`check-voice.mjs`, run fixtures under all three `--voice` values: a machine-written paragraph
+errors in each, a ripgrep-style paragraph passes plain with warnings only, a jab warns under
+quiet only. Smoke-test a capture against any
 served local site before trusting a change to `capture.mjs`/`readme-shot.mjs`.
 
 ## Pushing

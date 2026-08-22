@@ -21,6 +21,11 @@ CLAUDE.md's command list → `package.json` (`scripts.dev`/`start`, `bin`) → a
 Classify the surface, because it decides how media is made: **web** (has a URL or
 a static root), **CLI** (has a `bin`/console entry point), or **other** (desktop
 app, or a library with nothing to run).
+
+**Pick the register**, by references/voice.md `<choosing_the_register>`: the
+user's words first, then an existing marker or a CLAUDE.md line about voice, then
+what the project is and who reads it. One word: deadpan, plain or quiet; plain
+when nothing decides.
 </step_1>
 
 <step_2 name="Restructure branch">
@@ -35,10 +40,12 @@ like an options table or a schema), this is a **restructure**, not a fresh write
 Decide the media as one line each — "hero: the yard with a grave lit and its
 panel open", "GIF: a candle being lit", "second still: the ?edit form".
 
-On an **explicit** invocation, state the plan in one line and go — do not stop
-for approval. On an **auto-triggered** run, confirm it first with
-AskUserQuestion (approve / adjust / "I'll supply the media"), since the user did
-not ask for this outright. Either way, capture nothing the plan does not name.
+On an **explicit** invocation, state the plan in one line, the media and the
+register (`hero: …; GIF: …; register: quiet`), and go; do not stop for approval.
+On an **auto-triggered** run, confirm it first with AskUserQuestion (approve /
+adjust / "I'll supply the media"), with the register in the same question and
+your pick named, since the user did not ask for this outright. Either way,
+capture nothing the plan does not name.
 </step_3>
 
 <step_4 name="Capture the media">
@@ -65,11 +72,16 @@ block with real commands (it drives an agent, so it names files); the manual
 quick-start is the fewest commands that reach a running thing. The Docs section
 links the guide and 2–4 anchors. Every sentence passes the bloat test.
 
-Write in the register of references/voice.md: every section flat first, bare
-facts, sentence-case headings, no marketing word, no emoji, no exclamation mark.
-Then find the one fact per screen that is already funny and leave it bare. Do
-not add a joke and never label one. The slogan is an opinion. If the project
-invites sceptical questions, an FAQ of one-line literal answers is the place.
+Write in the register from step 1, by references/voice.md: every section flat
+first, bare facts, sentence-case headings, no marketing word, no emoji, no
+exclamation mark. Then the register's one move. Deadpan leaves bare the one fact
+per screen that is already funny; plain licenses each claim with its number and
+concedes the limit by the third sentence; quiet states the consequence and
+withholds the jab. Never add a joke, never label one. Line 1 of the file is the
+marker: `<!-- craft-readme: voice=<register> -->`. The slogan: an opinion in
+deadpan and quiet, category and mechanism in plain. If the project invites
+sceptical questions, an FAQ: one-line literal answers in deadpan, full answers
+with the limit conceded in plain and quiet.
 </step_7>
 
 <step_8 name="Tighten">
@@ -78,8 +90,9 @@ Follow `workflows/tighten-prose.md`, then return here.
 
 <step_9 name="Verify">
 - `node <skill>/scripts/check-readme.mjs README.md --docs docs` → exit 0
-- `node <skill>/scripts/check-voice.mjs README.md` → exit 0; every warning a
-  stated call, not a silent pass
+- `node <skill>/scripts/check-voice.mjs README.md` → exit 0. It reads the register
+  from the marker and names it in the header; `(plain, no marker)` means the
+  marker is missing, add it. Every warning a stated call, not a silent pass
 - restructure only: `node <skill>/scripts/check-coverage.mjs --old <(git show
   HEAD:README.md) --new README.md --new docs/GUIDE.md --allow "<each deliberate
   drop>"` → exit 0
@@ -100,6 +113,7 @@ document, verify and commit. This skill does not commit.
 - README ≤ ~100 lines, sections in the canonical order, animated demo under the header
 - at least one still and one animation in `docs/images/`, transparent corners, within budget
 - full reference content lives in `docs/GUIDE.md`, reached by anchor links
-- check-readme and check-voice clean; check-coverage clean in restructure mode
+- check-readme and check-voice clean, in the README's declared register;
+  check-coverage clean in restructure mode
 - nothing committed; the closing message points at /finish-session
 </success_criteria>

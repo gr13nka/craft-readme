@@ -1,3 +1,5 @@
+<!-- craft-readme: voice={{deadpan|plain|quiet}} -->
+<!-- keep the line above: check-voice reads it. Choose by references/voice.md <choosing_the_register>; plain when nothing decides. Delete this comment. -->
 <div align="center">
 
 <!-- optional mark: <img src="docs/images/logo.svg" width="72" alt=""> -->
@@ -8,7 +10,7 @@
 [![live](https://img.shields.io/badge/live-{{host}}-6f6ac4?style=flat-square)]({{live-url}})
 [![license {{SPDX}}](https://img.shields.io/badge/license-{{SPDX}}-6f6ac4?style=flat-square)](LICENSE)
 
-<!-- the slogan has an opinion and usually a verb; a description is not a slogan. references/voice.md -->
+<!-- the slogan: an opinion with a verb in deadpan and quiet; the category and the mechanism in plain. A feature list is not a slogan. references/voice.md -->
 **{{Slogan — what it is, ≤ 8 words}}**
 
 {{One plain line — what it does, ≤ 20 words.}}
@@ -48,7 +50,7 @@
 
 ## FAQ
 
-<!-- optional: 3–5 questions a sceptic actually asks, each answered in one line with the literal fact. Never "Why another X?". -->
+<!-- optional: 3–5 questions a sceptic actually asks. deadpan: the literal one-line answer; plain and quiet: a full answer, one to three sentences, the limit conceded. Never "Why another X?". -->
 **{{Sceptic's question?}}** {{The literal answer, one line.}}
 
 ## Docs

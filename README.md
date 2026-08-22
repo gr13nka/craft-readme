@@ -1,3 +1,4 @@
+<!-- craft-readme: voice=deadpan -->
 <div align="center">
 
 # craft-readme
@@ -58,7 +59,7 @@ node scripts/capture.mjs spec.json                        # web page → rounded
 node scripts/term.mjs run.txt --out cli.png --title app   # a transcript → terminal card
 node scripts/readme-shot.mjs README.md --out readme.png   # a README → how GitHub shows it
 node scripts/check-readme.mjs README.md --docs docs       # dead links, placeholders, budgets
-node scripts/check-voice.mjs README.md                    # "seamlessly", emoji, the wink in parentheses
+node scripts/check-voice.mjs README.md                    # "seamlessly", emoji, the wink; lints to the README's register
 ```
 
 ## Example output
@@ -85,6 +86,9 @@ nothing dropped out.
 
 **Will it read like a bot wrote it?** There's a check for that. Emoji, "seamlessly", "feel
 free to", "pro tip", the joke in parentheses all fail it. What passes is dry.
+
+**My project isn't a joke.** Then the README won't be one. Three registers: plain, deadpan,
+quiet. Say which, or it picks from the project. The pick goes on line one.
 
 ## Docs
 

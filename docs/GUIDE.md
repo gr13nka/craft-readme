@@ -49,7 +49,7 @@ All in `scripts/`, zero-dependency Node, run with `node` alone.
 | `encode.mjs frames/ out.gif` | frames → GIF or APNG, ffmpeg-free |
 | `check-readme.mjs` | fails on dead links, broken anchors, placeholders, oversized images |
 | `check-coverage.mjs` | proves a restructure moved prose verbatim |
-| `check-voice.mjs` | fails on the vocabulary and the winks that mark prose as machine-written; warns on the structural tells |
+| `check-voice.mjs` | fails on the vocabulary and the winks that mark prose as machine-written; warns on the structural tells; lints to the register the README declares |
 | `serve.mjs dir` | a zero-dependency static server, used internally and standalone |
 
 The GIF encoder is pure Node — a median-cut palette (255 colours plus a transparent
@@ -123,24 +123,41 @@ somewhere in the new files, so a restructure cannot paraphrase content away. Pas
 for the lines you meant to drop.
 
 `check-voice` reads the prose only (fenced code, inline code, quoted mentions, HTML, URLs
-and badges are skipped) and reports each hit with its line. Errors: marketing adjectives (`powerful`,
-`seamless`, `lightweight`, `leverage`), softeners (`simply`, `easily`, `with ease`),
-connective tissue (`whether you're`, `designed to`, `making it easy to`, `additionally`),
-boilerplate (`Welcome to`, `Feel free to`, `Happy coding`, `Contributions are welcome`),
-emoji, exclamation marks, a bold-lead-in features list, a `Why X?` heading, and the winks
-(`(yes, really)`, `spoiler alert`, `pro tip`, `™`, `/s`). Warnings: an em-dash, a
-semicolon, a rule-of-three list, "not X, but Y", a participial payoff, three sentences of
-one length, three sentences opening on one word, a Title Case heading. Errors fail it;
-`--strict` makes warnings fail too. The full lists are the script's first hundred lines.
+and badges are skipped) and reports each hit with its line. Errors: marketing adjectives
+(`seamless`, `leverage`, `elegant`), claim adjectives without a number (`powerful`,
+`lightweight`), softeners (`simply`, `easily`, `with ease`), connective tissue (`whether
+you're`, `designed to`, `making it easy to`, `additionally`), boilerplate (`Welcome to`,
+`Feel free to`, `Happy coding`, `Contributions are welcome`), emoji, exclamation marks, a
+bold-lead-in features list, and the winks (`(yes, really)`, `spoiler alert`, `pro tip`, `™`,
+`/s`). Warnings: an em-dash, a semicolon, a rule-of-three list, "not X, but Y", a participial
+payoff, a `Why X?` heading, three sentences of one length, three sentences opening on one
+word, a Title Case heading. Errors fail it; `--strict` makes warnings fail too. The lists are
+at the top of the script.
+
+It lints to a register. The README declares one on its first line
+(`<!-- craft-readme: voice=quiet -->`); `--voice deadpan|plain|quiet` overrides it; neither →
+plain. `plain` lets a claim adjective through as a warning when the line carries its number
+or a link, turns `!` and bold-label bullets into warnings (three `!` in a file is an error
+again), and stops warning on "Note that", question headings, Contributing-style and Credits
+headings and sentence rhythm. `quiet` stops warning on "which means" / ", so you can" and on
+a Credits heading, and warns on a jab (nobody, you won't, dead, garbage). `deadpan` is the
+full set. The header names the register it used; an unmarked README lints as plain until it
+gets its marker, and the header says `(plain, no marker)`.
 
 ## The voice
 
-`references/voice.md`. The register is bash.org: terse, deadpan, the sarcasm aimed at the
-wall-of-text README and the options table nobody opens, never at the reader. The skill
-writes every section flat and then leaves bare the one fact per screen that is already
-funny. It never adds a joke and never labels one. The slogan is an opinion. An FAQ of
-one-line literal answers is allowed. The reference carries the mechanics, the full list of
-machine tells, section-scale rewrites, and the author's own cuts.
+`references/voice.md`. Three registers over one core. The core is what keeps prose from
+reading machine-written: every section written flat first, none of the machine tells, cut to
+the bone, each fact once, no emoji, no exclamation marks, no joke ever labelled. The
+register is one move applied after the flat draft. **plain** (ripgrep, uv, fd; the default)
+licenses every claim with a number and concedes the limit early. **deadpan** (bash.org; a
+dev tool with a thesis) leaves bare the one fact per screen that is already funny.
+**quiet** (a meditation app's README) states the consequence and withholds the jab. The
+skill picks by the user's words, then the project's own doctrine, then what it is and who
+reads it; plain when nothing decides. The pick goes on the README's first line as a marker
+and `check-voice` lints to it. The reference carries the choosing ladder, the mechanics of
+each register with quoted lines from real READMEs, the machine's imitation of each, and
+section-scale rewrites in all three.
 
 ## What it enforces
 

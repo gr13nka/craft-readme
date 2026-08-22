@@ -1,6 +1,6 @@
 ---
 name: craft-readme
-description: Rebuilds a project's README as a short, image-led landing page: header with true badges, a slogan, a rounded screenshot and a short GIF, an agent quick-start and a manual one, all reference detail moved to docs/GUIDE.md behind anchor links. Captures the screenshots and GIFs itself (headless web pages, or a terminal card for CLIs) with zero dependencies, and writes dry, deadpan bash.org-register prose with the LLM tells stripped and linted. Use when the user says "write / polish / redo the README", "the README is bloated / too long / daunting", "the README sounds AI-written / like ChatGPT / too corporate, make it sound human", "add a screenshot or GIF to the README", "make the readme look nice", or invokes /craft-readme. Not for running or screenshotting an app to verify a change (the run skill), driving desktop apps (computer-use), Orca's embedded browser (orca-cli), or routine end-of-session README touch-ups (finish-session edits a README only when setup or commands changed; this skill is the full rewrite).
+description: Rebuilds a project's README as a short, image-led landing page: header, true badges, a slogan, a rounded screenshot, a short GIF, agent and manual quick-starts, reference detail moved to docs/GUIDE.md behind anchor links. Captures the screenshots and GIFs itself (headless web pages, or a terminal card for CLIs) with zero dependencies, and writes the prose in a register that fits the project (plain by default, deadpan, or quiet for calm apps) with the LLM tells stripped and linted. Use when the user says "write / polish / redo the README", "the README is bloated / too long", "it sounds AI-written / like ChatGPT, make it sound human", "make the README calmer / more formal / less sarcastic", "add a screenshot / GIF to the README", "make the readme look nice", or invokes /craft-readme. Not for running or screenshotting an app to verify a change (the run skill), desktop apps (computer-use), Orca's embedded browser (orca-cli), or end-of-session README touch-ups (finish-session; this skill is the full rewrite).
 ---
 
 <objective>
@@ -46,11 +46,14 @@ theme, whichever it is. Check on white and on `#0d1117`.
 **Never commit.** End by listing changed files and pointing at `/finish-session`.
 
 **Voice is part of the job.** A README that reads as machine-written undoes the rest of the
-work. The register is bash.org. Terse and deadpan. The sarcasm aims at software ceremony,
-never at the reader. The punchline is a plain fact, found in what is already true, not
-added, and never labelled with a wink. No marketing word, no emoji, no exclamation mark.
-`references/voice.md` has the mechanics and the tells; `scripts/check-voice.mjs` fails on
-the ones a regex can hold. Run it before saying done.
+work. Three registers, one core. Plain (ripgrep, uv; a library or CLI used by strangers,
+anything formal; the default), deadpan (bash.org; a dev tool with a thesis), quiet (a
+meditation or notes app; calm, faintly clinical, nothing at the reader's expense). The core
+holds in all three: no marketing word, no emoji, no exclamation mark, no labelled joke, each
+fact once, cut to the bone. The register is picked in the audit, stated in the plan, and
+declared on the README's first line (`<!-- craft-readme: voice=quiet -->`);
+`scripts/check-voice.mjs` reads it and lints to it. `references/voice.md` has the choosing
+signals and the mechanics. Run the check before saying done.
 </essential_principles>
 
 <context>
@@ -76,9 +79,15 @@ tighten the prose" → `tighten-prose`.
 conversation rather than an explicit request. Then confirm intent first:
 
 > What would you like — (1) build/rebuild the whole README, (2) capture screenshots or a
-> GIF only, (3) tighten the existing prose? I'll otherwise rebuild it.
+> GIF only, (3) tighten the existing prose? I'll otherwise rebuild it. And the register:
+> deadpan, plain or quiet? I'd pick <x> for this project.
 
 Wait for the answer before proceeding.
+
+**Read the register out of the request**, on any path, and carry it into the workflow:
+formal / serious / plain → plain; calm / quiet / gentle → quiet; dry / deadpan / sarcastic →
+deadpan; "less sarcastic", "tone it down" → not deadpan, plain or quiet by the project. No
+word → the workflow picks from the project, plain when nothing decides.
 </intake>
 
 <routing>
@@ -88,6 +97,7 @@ Wait for the answer before proceeding.
 | "screenshot", "gif", "capture", "add an image" only | `workflows/capture-media.md` |
 | "tighten", "bloated", "too long", "trim" only | `workflows/tighten-prose.md` |
 | "sounds AI-written / like an LLM / too corporate", "make it sound human" | `workflows/tighten-prose.md` |
+| "make it calmer / more formal / less sarcastic / change the tone" | `workflows/tighten-prose.md` (a re-voice) |
 
 **After reading the workflow, follow it exactly.**
 </routing>
@@ -103,7 +113,7 @@ Wait for the answer before proceeding.
 <reference_index>
 All in `references/`:
 - readme-anatomy.md — section order, word budgets, the prose rules, before/after examples
-- voice.md — the bash.org register, the machine tells, worked rewrites, the author's cuts
+- voice.md — three registers (plain, deadpan, quiet) over one core, how to choose, the machine tells, worked rewrites
 - badges.md — shields URLs and the truth condition for each badge
 - media-rules.md — transparent corners, sizes, GIF vs APNG, formats GitHub renders, the push trick
 - capture-traps.md — what the scripts handle for you, and the knobs you still own
@@ -125,7 +135,7 @@ All in `scripts/`, run with `node`:
 - `encode.mjs frames/ out.gif|out.apng [--fps 20]` — frames → animation
 - `check-readme.mjs README.md --docs docs` — links, anchors, placeholders, image budgets, real commands
 - `check-coverage.mjs --old old.md --new README.md --new docs/GUIDE.md [--allow pat]` — nothing lost in a move
-- `check-voice.mjs README.md [--strict]` — the machine tells: marketing words, softeners, boilerplate, emoji, winks; warns on em-dashes, triplets, antithesis, rhythm
+- `check-voice.mjs README.md [--voice deadpan|plain|quiet] [--strict]` — the machine tells, linted to the register in the README's marker (or `--voice`; plain if neither): marketing words, softeners, boilerplate, emoji, winks error; em-dashes, triplets, antithesis, rhythm warn; plain licenses a claim by its number, quiet warns on a jab
 - `serve.mjs dir [--port N]` — zero-dep static server (also used internally)
 </scripts_index>
 
@@ -133,13 +143,14 @@ All in `scripts/`, run with `node`:
 A terse pre-flight, drawn from the principles above plus two things they do not say:
 - Persist the HTTP/1.1 push flags to git config — they are per-command only.
 - Invent terminal output for a CLI card — paste a real run or `--help`.
-- Add a joke, or label one. The register leaves a true fact bare; it never decorates.
+- Add a joke, or label one. Deadpan leaves a true fact bare; plain and quiet do not joke; no register decorates.
+- Write deadpan or quiet without a reason from the user's words or the project. The fallback is plain, and the choice goes into the marker.
 </never>
 
 <success_criteria>
 - README ≤ ~100 lines, canonical section order, animated demo under the header
 - ≥ 1 still and 1 animation in `docs/images/`, transparent corners, within budget
 - all reference detail in `docs/GUIDE.md`, reached by anchor links
-- `check-readme` and `check-voice` clean; `check-coverage` clean when restructuring
+- `check-readme` and `check-voice` clean, in the README's declared register; `check-coverage` clean when restructuring
 - nothing committed; the closing message points at `/finish-session`
 </success_criteria>

@@ -7,12 +7,22 @@
  * em-dash aside, the rule-of-three list, "not X, but Y", the participial
  * payoff, same-length sentences, semicolons, a Title Case heading.
  *
- *   node check-voice.mjs [README.md …] [--strict]
+ *   node check-voice.mjs [README.md …] [--voice deadpan|plain|quiet] [--strict]
+ *
+ * Three registers share one core. The register comes from --voice, else the
+ * <!-- craft-readme: voice=… --> marker on the README's first line, else
+ * plain. The base rules are the full set, which is deadpan's; a register is a
+ * set of overrides on them (references/voice.md explains each). plain lets a
+ * claim adjective through as a warning when its line carries the number or a
+ * link, turns "!" and bold-label bullets into warnings (three "!" is an error
+ * again), and stops warning on "Note that", question headings, Contributing
+ * and Credits headings and sentence rhythm. quiet stops warning on the
+ * consequence clause ("which means", ", so you can") and warns on a jab.
  *
  * Prose only. Fenced code, inline code, quoted spans, HTML tags, comments,
- * URLs and badges are ignored (a mention of "seamlessly" is not a use). Exit 1 on any error (any warning too with --strict), else 0.
- * The rules are explained in references/voice.md; this is the part of them a
- * regex can hold. A warning is a judgment call, not a verdict.
+ * URLs and badges are ignored (a mention of "seamlessly" is not a use).
+ * Exit 1 on any error (any warning too with --strict), 2 on a bad flag, else
+ * 0. A warning is a judgment call, not a verdict.
  */
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -21,17 +31,21 @@ import { fileURLToPath } from 'node:url';
 /* ---- the word lists ------------------------------------------------------ */
 
 const MARKETING = [
-  'powerful', 'robust(?:ly|ness)?', 'seamless(?:ly)?',
-  'blazing(?:ly)?(?:[- ]fast)?', 'lightning[- ]fast', 'lightweight', 'cutting[- ]edge', 'state[- ]of[- ]the[- ]art',
+  'seamless(?:ly)?', 'cutting[- ]edge', 'state[- ]of[- ]the[- ]art',
   'next[- ]gen(?:eration)?', 'best[- ]in[- ]class', 'world[- ]class', 'enterprise[- ]grade', 'production[- ]grade',
   'battle[- ]tested', 'game[- ]chang(?:er|ing)', 'revolutioni[sz]e[sd]?', 'supercharged?', 'turbocharged?',
   'unleash(?:es|ed)?', 'empower(?:s|ed|ing)?', 'leverag(?:e|es|ed|ing)', 'utili[sz](?:e|es|ed|ing)',
   'streamlin(?:e|es|ed|ing)', 'delightful', 'magical(?:ly)?', 'elegant(?:ly)?', 'intuitive(?:ly)?',
-  'beautiful(?:ly)?', 'sleek', 'comprehensive', 'versatile', 'feature[- ]rich', 'full[- ]featured',
+  'beautiful(?:ly)?', 'sleek', 'versatile', 'feature[- ]rich', 'full[- ]featured',
   'all[- ]in[- ]one', 'one[- ]stop', 'plug[- ]and[- ]play', 'easy[- ]to[- ]use', 'user[- ]friendly',
   'developer[- ]friendly', 'first[- ]class', 'batteries[- ]included', 'ready[- ]to[- ]use', 'purpose[- ]built',
   'tailored', 'curated',
 ];
+
+/* A claim adjective: true when a number stands next to it (uv: "10-100x faster
+   [benchmarks]"), a tell when nothing does. plain lets it through as a warning
+   on a line that carries a digit or a link. */
+const CLAIM = ['powerful', 'robust(?:ly|ness)?', 'lightweight', 'comprehensive', 'blazing(?:ly)?(?:[- ]fast)?', 'lightning[- ]fast'];
 
 /* "This is easy", said instead of shown. */
 const SOFTENER = ['simply', 'easily', 'with ease', 'a breeze', 'painless(?:ly)?', 'effortless(?:ly)?', 'hassle[- ]free', 'frictionless'];
@@ -59,11 +73,19 @@ const SCAFFOLD = [
 ];
 
 const SCAFFOLD_SOFT = [
-  'ensur(?:es|ing|e)(?: that)?', 'note that', 'basically', 'under the hood', 'no more \\w+', 'this means (?:that )?',
-  'which means', 'can be used to', 'provides? a (?:way|simple way|set of)', 'that said,', 'as well as', 'etc\\.?',
+  'ensur(?:es|ing|e)(?: that)?', 'basically', 'under the hood', 'no more \\w+',
+  'can be used to', 'provides? a (?:way|simple way|set of)', 'that said,', 'as well as', 'etc\\.?',
   '(?:incredibly|truly|extremely|highly|super|absolutely|totally|genuinely|remarkably|exceptionally|significantly)',
   '(?:potentially|generally|typically|in most cases|somewhat|fairly|relatively|arguably)',
 ];
+
+/* The caveat opener serious READMEs use (bat, tokio, zstd); a hedge elsewhere. */
+const CAVEAT = ['note that'];
+
+/* The consequence clause: a feature, then what it guarantees you. The quiet
+   register's key move (Joplin: "offline first, which means you always have all
+   your data on your phone"); the explained payoff in the others. */
+const CONSEQUENCE = /\b(?:which|this|that) means\b|, so (?:that )?you (?:can|don'?t|never|won'?t)\b/giu;
 
 const BOILERPLATE = [
   '^welcome to', '^introducing', '^meet \\w+[,.!]', 'say hello to', 'happy (?:coding|hacking|building|shipping|writing)',
@@ -95,32 +117,73 @@ const WINK = [
 ];
 const WINK_SOFT = ['obviously', 'of course,', 'needless to say', 'to be fair', 'in all seriousness', 'jokes aside'];
 
-const HEADING = ['(?:key )?features?$', 'why \\w+\\??$', 'table of contents', 'tl;?dr', '^(?:overview|introduction|about)$'];
-const HEADING_SOFT = [
-  '^(?:getting started|prerequisites|contributing|acknowledg\\w*|roadmap|changelog|support|contact|authors?|motivation|background|credits)$',
-];
+/* The jab. A quiet README withholds; it does not take a swing at the reader,
+   a user, or a competitor. */
+const HARSH = ['nobody', 'no one', "you won'?t", "you'?ll never", 'dead', 'dies?', 'kill(?:s|ed|ing)?', 'garbage', 'stupid',
+  'dumb', 'damn', 'hell', 'sucks?', 'hate[sd]?', 'useless', 'idiots?', 'pain in the', "don'?t bother", 'wall of text'];
+
+const HEADING = ['(?:key )?features?$', 'table of contents', 'tl;?dr', '^(?:overview|introduction|about)$'];
+const HEADING_SOFT = ['^(?:getting started|prerequisites|contributing|roadmap|changelog|support|contact|authors?|motivation|background)$'];
+const HEADING_CREDIT = ['^(?:acknowledg\\w*|credits|thanks|sponsors?)$'];
 
 const word = (alts) => new RegExp(`(?<![\\w-])(?:${alts.join('|')})(?![\\w-])`, 'giu');
 
-/* [id, level, regex, hint]. The regex runs on cleaned prose, lowercase-insensitive. */
+/* [key, level, regex, hint]. The key is unique and is the id printed; the
+   registers override by it. The regex runs on cleaned prose, case-insensitive. */
 const RULES = [
-  ['marketing',   'error', word(MARKETING),      'say what it does, or the number; the adjective is the tell'],
-  ['softener',    'error', word(SOFTENER),       'a softener; it says "this is easy" instead of showing the one command'],
-  ['softener',    'warn',  word(MARKETING_SOFT), 'a softener; cut it, the command is the same length without it'],
-  ['scaffold',    'error', word(SCAFFOLD),        'LLM connective tissue; state the thing and stop'],
-  ['scaffold',    'warn',  word(SCAFFOLD_SOFT),   'hedge or filler; cut unless it carries a fact'],
-  ['boilerplate', 'error', word(BOILERPLATE),     'README boilerplate; nobody reads it, and it reads generated'],
-  ['boilerplate', 'warn',  word(BOILERPLATE_SOFT),'boilerplate shape; does the line say anything true and actionable?'],
-  ['wink',        'error', word(WINK),            'the joke is being labelled; drop the label, usually the joke'],
-  ['wink',        'warn',  word(WINK_SOFT),       'a wink; the line should stand without it'],
-  ['wink',        'error', /\u2122|\(tm\)/gi,       'the ironic ™; the tell of an LLM doing sarcasm'],
-  ['em-dash',     'warn',  /\u2014|\s--\s|\s\u2013\s/g, 'a period usually does the job; keep only if you would defend it'],
-  ['semicolon',   'warn',  /;(?=\s)/g,            'READMEs rarely need one; two sentences'],
-  ['antithesis',  'warn',  /\bnot (?:just |only |merely |simply |about )?[^,.;]{1,50}, (?:it'?s|it is|but|rather|that'?s)\b|\bnot [^,.;]{1,40}, but\b|, not [^,.;]{1,30}\.(?:\s|$)/giu, '"not X, Y" balance; pick a side'],
-  ['payoff',      'error', /, (?:making|allowing|enabling|ensuring|empowering) (?:it|you|them|us|the|this|your|a|an|each|every|for)\b/giu, 'the participial tail explains the payoff; the reader got it'],
-  ['payoff',      'warn',  /, (?:which|that) (?:makes|means|ensures|allows|lets|keeps|gives|is what)\b|, so (?:that )?you (?:can|don'?t|never|won'?t)\b/giu, 'explaining the payoff; state the thing and stop'],
-  ['ellipsis',    'warn',  /(?:\.\.\.|\u2026)\s*$/g, 'trailing off; finish the sentence or cut it'],
+  ['marketing',        'error', word(MARKETING),      'say what it does, or the number; the adjective is the tell'],
+  ['claim',            'error', word(CLAIM),          'a claim adjective; give the number, or the link to the benchmark'],
+  ['softener',         'error', word(SOFTENER),       'a softener; it says "this is easy" instead of showing the one command'],
+  ['marketing-soft',   'warn',  word(MARKETING_SOFT), 'a softener; cut it, the command is the same length without it'],
+  ['scaffold',         'error', word(SCAFFOLD),        'LLM connective tissue; state the thing and stop'],
+  ['scaffold-soft',    'warn',  word(SCAFFOLD_SOFT),   'hedge or filler; cut unless it carries a fact'],
+  ['caveat',           'warn',  word(CAVEAT),          'a hedge; cut unless the caveat carries a fact'],
+  ['consequence',      'warn',  CONSEQUENCE,           'explaining the payoff; state the thing and stop'],
+  ['boilerplate',      'error', word(BOILERPLATE),     'README boilerplate; nobody reads it, and it reads generated'],
+  ['boilerplate-soft', 'warn',  word(BOILERPLATE_SOFT),'boilerplate shape; does the line say anything true and actionable?'],
+  ['wink',             'error', word(WINK),            'the joke is being labelled; drop the label, usually the joke'],
+  ['wink-soft',        'warn',  word(WINK_SOFT),       'a wink; the line should stand without it'],
+  ['tm',               'error', /\u2122|\(tm\)/gi,       'the ironic ™; the tell of an LLM doing sarcasm'],
+  ['em-dash',          'warn',  /\u2014|\s--\s|\s\u2013\s/g, 'a period usually does the job; keep only if you would defend it'],
+  ['semicolon',        'warn',  /;(?=\s)/g,            'READMEs rarely need one; two sentences'],
+  ['antithesis',       'warn',  /\bnot (?:just |only |merely |simply |about )?[^,.;]{1,50}, (?:it'?s|it is|but|rather|that'?s)\b|\bnot [^,.;]{1,40}, but\b|, not [^,.;]{1,30}\.(?:\s|$)/giu, '"not X, Y" balance; pick a side'],
+  ['payoff',           'error', /, (?:making|allowing|enabling|ensuring|empowering) (?:it|you|them|us|the|this|your|a|an|each|every|for)\b/giu, 'the participial tail explains the payoff; the reader got it'],
+  ['payoff-soft',      'warn',  /, (?:which|that) (?:makes|ensures|allows|lets|keeps|gives|is what)\b/giu, 'explaining the payoff; state the thing and stop'],
+  ['ellipsis',         'warn',  /(?:\.\.\.|\u2026)\s*$/g, 'trailing off; finish the sentence or cut it'],
 ];
+
+/* ---- the registers ------------------------------------------------------- */
+
+/* A register is a set of overrides on the base rules, by key. skip: not
+   reported. warn: an error becomes a warning. licensed: an error becomes a
+   warning when the line carries a number or a link. density: N or more of a
+   warning in one file is an error after all. extra: rules only this register
+   runs. The base rules are the full set, which is deadpan's; the default when
+   nothing says otherwise is plain. */
+const PROFILES = {
+  deadpan: {},
+  plain: {
+    skip: ['caveat', 'heading-question', 'heading-soft', 'heading-credit', 'rhythm'],
+    warn: ['exclamation', 'bold-bullets', 'heading'],
+    licensed: ['claim'],
+    density: { exclamation: 3 },
+  },
+  quiet: {
+    skip: ['consequence', 'heading-credit'],
+    extra: [['harsh', 'warn', word(HARSH), 'quiet withholds; it does not jab']],
+  },
+};
+const VOICES = Object.keys(PROFILES);
+const DEFAULT_VOICE = 'plain';
+const LICENSED_HINT = 'the number or link on the line licenses it; keep only if that is the measure of the claim';
+
+/* <!-- craft-readme: voice=quiet --> on the README's first line. Read from the
+   raw source, because proseLines strips comments. First match wins. */
+const MARKER = /<!--\s*craft-readme:\s*voice\s*=\s*([\w-]+)\s*-->/i;
+export function readMarker(src) {
+  const m = src.match(MARKER);
+  return m ? { voice: m[1].toLowerCase(), line: src.slice(0, m.index).split('\n').length } : {};
+}
 
 /* ---- the text ------------------------------------------------------------ */
 
@@ -176,20 +239,38 @@ function proseLines(src) {
 const sentences = (t) => t.split(/(?<=[.!?])\s+(?=[A-Z"'(\[])/).map((s) => s.trim()).filter(Boolean);
 const words = (s) => s.split(/\s+/).filter(Boolean).length;
 const snip = (s, n = 60) => (s.length > n ? s.slice(0, n - 1) + '\u2026' : s);
+/* A digit in the prose, or a non-image link on the raw line: the evidence that licenses a claim. */
+const measured = (L) => /\d/.test(L.text) || /(?<!!)\[[^\]]+\]\([^)]+\)/.test(L.raw);
 
 /* ---- the check ----------------------------------------------------------- */
 
-export async function checkVoice(file) {
+export async function checkVoice(file, { voice } = {}) {
   const src = await readFile(file, 'utf8');
-  const lines = proseLines(src);
+  const marker = readMarker(src);
+  let v = voice ?? marker.voice ?? DEFAULT_VOICE;
+  const source = voice ? 'flag' : marker.voice ? 'marker' : 'default';
   const found = [];
-  const add = (n, level, id, text, hint) => found.push({ line: n, level, id, text: snip(text), hint });
+  if (!PROFILES[v]) {
+    found.push({ line: marker.line ?? 1, level: 'error', id: 'marker', text: `voice=${v}`, hint: `unknown register; one of ${VOICES.join(', ')}` });
+    v = DEFAULT_VOICE;
+  }
+  const P = PROFILES[v], skip = new Set(P.skip), soften = new Set(P.warn), licensed = new Set(P.licensed);
+  const rules = [...RULES, ...(P.extra ?? [])];
+  const add = (n, level, id, text, hint) => {
+    if (skip.has(id)) return;
+    found.push({ line: n, level: soften.has(id) ? 'warn' : level, id, text: snip(text), hint });
+  };
+  const lines = proseLines(src);
 
   for (const L of lines) {
     const t = L.text;
-    for (const [id, level, re, hint] of RULES) {
+    for (const [id, level, re, hint] of rules) {
       re.lastIndex = 0;
-      for (let m; (m = re.exec(t)); ) add(L.n, level, id, m[0].trim() || m[0], hint);
+      for (let m; (m = re.exec(t)); ) {
+        const hit = m[0].trim() || m[0];
+        if (licensed.has(id) && measured(L)) add(L.n, 'warn', id, hit, LICENSED_HINT);
+        else add(L.n, level, id, hit, hint);
+      }
     }
     const em = [...t.matchAll(EMOJI)].find((m) => !/[©®™]/.test(m[0]));
     if (em) add(L.n, 'error', 'emoji', em[0], 'no emoji, anywhere, in any register');
@@ -197,12 +278,14 @@ export async function checkVoice(file) {
 
     if (L.kind === 'heading') {
       for (const re of HEADING) if (new RegExp(re, 'iu').test(t)) add(L.n, 'error', 'heading', t, 'a machine-shaped heading; name what the section actually shows');
-      for (const re of HEADING_SOFT) if (new RegExp(re, 'iu').test(t)) add(L.n, 'warn', 'heading', t, 'boilerplate section on a landing page; keep only if it says something true and actionable');
-      if (/\?\s*$/.test(t) && !/^(?:key )?features/i.test(t)) add(L.n, 'warn', 'heading', t, 'a question heading; the reader did not ask it');
+      for (const re of HEADING_SOFT) if (new RegExp(re, 'iu').test(t)) add(L.n, 'warn', 'heading-soft', t, 'boilerplate section on a landing page; keep only if it says something true and actionable');
+      for (const re of HEADING_CREDIT) if (new RegExp(re, 'iu').test(t)) add(L.n, 'warn', 'heading-credit', t, 'a credits section; one line under License usually carries it');
+      if (/^why \w+\??$/iu.test(t)) add(L.n, 'warn', 'heading-question', t, '"Why X?" is the machine\'s favourite heading; humans use it too (esbuild). Name what the section shows');
+      else if (/\?\s*$/.test(t) && !/^(?:key )?features/i.test(t)) add(L.n, 'warn', 'heading-question', t, 'a question heading; the reader did not ask it');
       const ws = t.split(/\s+/);
       const caps = ws.slice(1).filter((w) => /^[A-Z][a-z]{3,}/.test(w)).length;
       const lower = ws.slice(1).filter((w) => /^[a-z]{4,}/.test(w)).length;
-      if (ws.length >= 3 && caps >= 2 && lower === 0) add(L.n, 'warn', 'heading', t, 'Title Case heading; sentence case reads human');
+      if (ws.length >= 3 && caps >= 2 && lower === 0) add(L.n, 'warn', 'heading-case', t, 'Title Case heading; sentence case reads human');
     }
 
     /* Rule of three: "A, B, and C", or "A, B and C" when the items are short. */
@@ -243,23 +326,34 @@ export async function checkVoice(file) {
   }
   flush();
 
-  return found.sort((a, b) => a.line - b.line || (a.level === b.level ? 0 : a.level === 'error' ? -1 : 1));
+  /* Density: what a register lets through one at a time, it does not let through in bulk. */
+  for (const [id, cap] of Object.entries(P.density ?? {})) {
+    const hits = found.filter((x) => x.id === id);
+    if (hits.length >= cap) found.push({ line: hits[0].line, level: 'error', id: `${id}-density`, text: `${hits.length} in the file`, hint: `${hits.length} ${id} marks reads generated (tokio has one; Logseq 26)` });
+  }
+
+  found.sort((a, b) => a.line - b.line || (a.level === b.level ? 0 : a.level === 'error' ? -1 : 1));
+  return { voice: v, source, marker: marker.voice, findings: found };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const strict = args.includes('--strict');
-  const files = args.filter((a) => !a.startsWith('--'));
+  const vi = args.indexOf('--voice');
+  const voice = vi >= 0 ? args[vi + 1] : undefined;
+  if (vi >= 0 && !PROFILES[voice]) { console.error(`check-voice: --voice takes one of ${VOICES.join(', ')}`); process.exit(2); }
+  const files = args.filter((a, i) => !a.startsWith('--') && (vi < 0 || i !== vi + 1));
   if (!files.length) files.push('README.md');
   let errors = 0, warns = 0;
   for (const f of files) {
-    const found = await checkVoice(f);
-    const e = found.filter((x) => x.level === 'error').length, w = found.length - e;
+    const { voice: v, source, marker, findings } = await checkVoice(f, { voice });
+    const tag = source === 'default' ? `${v}, no marker` : marker && marker !== v ? `${v}, marker says ${marker}` : v;
+    const e = findings.filter((x) => x.level === 'error').length, w = findings.length - e;
     errors += e; warns += w;
-    if (!found.length) { console.log(`check-voice: ${f} clean`); continue; }
-    console.error(`check-voice: ${f}: ${e} error(s), ${w} warning(s)`);
-    for (const x of found)
-      console.error(`  L${String(x.line).padEnd(4)} ${x.level.padEnd(5)} ${x.id.padEnd(12)} "${x.text}"  \u2192 ${x.hint}`);
+    if (!findings.length) { console.log(`check-voice: ${f} (${tag}) clean`); continue; }
+    console.error(`check-voice: ${f} (${tag}): ${e} error(s), ${w} warning(s)`);
+    for (const x of findings)
+      console.error(`  L${String(x.line).padEnd(4)} ${x.level.padEnd(5)} ${x.id.padEnd(16)} "${x.text}"  \u2192 ${x.hint}`);
   }
   process.exit(errors || (strict && warns) ? 1 : 0);
 }
