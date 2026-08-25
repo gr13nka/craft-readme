@@ -5,6 +5,8 @@
 
 ***Nobody reads the wall of text. Show them the thing.***
 
+craft-readme is a Claude Code skill that rebuilds a README as a landing page and takes the screenshots itself.
+
 [![license MIT](https://img.shields.io/badge/license-MIT-6f6ac4?style=flat-square)](LICENSE)
 [![Claude Code skill](https://img.shields.io/badge/Claude_Code-skill-6f6ac4?style=flat-square)](https://docs.claude.com/en/docs/claude-code)
 ![zero dependencies](https://img.shields.io/badge/dependencies-0-8b8b8b?style=flat-square)
@@ -17,9 +19,8 @@
 Most READMEs are the same wall of text. Setup steps, an options table nobody opens, not one
 picture of the thing running.
 
-craft-readme cuts it down to a landing page. A screenshot, a short GIF, a quick start. The
-reference goes in a guide behind a link. It's a Claude Code skill. It takes its own
-screenshots.
+craft-readme cuts it down to a landing page: a screenshot, a short GIF, a quick start. The
+reference goes in a guide behind a link.
 
 ## What it does
 
