@@ -87,12 +87,25 @@ the word-list rules and the inline checks alike. **Rule keys are unique and are 
 printed; keep them unique when adding a row.** This repo's own docs are deadpan; hold to it
 when editing them.
 
+**The Pages site is generated, so it drifts.** `index.html` and `docs/guide.html` are built
+from `README.md` and `docs/GUIDE.md` by `scripts/site.mjs`, using this repo's own
+`markdown.mjs` and `github-readme.css` — no Jekyll, no front matter in the sources, same
+zero-dependency rule as everything else. **Edit the markdown, then regenerate and commit
+both.** It exists because a docs page tends to outrank the repo page it documents, and a
+Pages site is the only surface where `<title>`, the meta description and the og: tags are
+ours to set. Pages serves from the repo root, so `index.html` sees `docs/images/*` and
+`docs/guide.html` sees `../` without any path rewriting; only markdown-to-markdown links
+are rewritten. It is repo infrastructure, not part of the skill — the skill does not build
+Pages sites for the projects it works on.
+
 ## Verify
 
 No test suite. `node --check scripts/*.mjs`, then run the skill's own gates on itself:
 `node scripts/check-readme.mjs README.md --docs docs`, `node scripts/check-voice.mjs
 README.md` (the header must read `(deadpan)`, from the marker), and `node
-scripts/check-discovery.mjs README.md` (`--no-remote` when `gh` is unavailable). When touching
+scripts/check-discovery.mjs README.md` (`--no-remote` when `gh` is unavailable). After any
+README or GUIDE edit, `node scripts/site.mjs README.md:index.html
+docs/GUIDE.md:docs/guide.html --base https://gr13nka.github.io/craft-readme`. When touching
 `check-voice.mjs`, run fixtures under all three `--voice` values: a machine-written paragraph
 errors in each, a ripgrep-style paragraph passes plain with warnings only, a jab warns under
 quiet only. Smoke-test a capture against any

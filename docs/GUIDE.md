@@ -12,6 +12,7 @@ fields that decide whether anyone finds the repo at all.
 - [The checks](#the-checks)
 - [The voice](#the-voice)
 - [Being found](#being-found)
+- [The Pages site](#the-pages-site)
 - [What it enforces](#what-it-enforces)
 - [Requirements](#requirements)
 
@@ -208,6 +209,22 @@ description of an image that survives). Two things it names but leaves to you: p
 repo on your profile, and getting listed on the relevant awesome-list. github.com publishes
 no sitemap and a profile page links only pinned repos, so for an unlinked repo pinning is
 the difference between one crawl path and none.
+
+## The Pages site
+
+`index.html` and `docs/guide.html` are generated from `README.md` and this file by
+`scripts/site.mjs`, which reuses `markdown.mjs` and `github-readme.css`. No Jekyll, no front
+matter, nothing to install:
+
+```bash
+node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
+  --base https://gr13nka.github.io/craft-readme
+```
+
+It writes each page where its relative paths already resolve, rewrites links between the
+markdown files it generates, derives the meta description from the opening prose, and emits
+the canonical and og: tags. Regenerate after editing either markdown file; the HTML is
+committed, so it drifts if you forget.
 
 ## Requirements
 

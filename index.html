@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>craft-readme</title>
+<meta name="description" content="Nobody reads the wall of text. Show them the thing. craft-readme is a Claude Code skill that rebuilds a README as a landing page and takes the screenshots itself.">
+<link rel="canonical" href="https://gr13nka.github.io/craft-readme/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="craft-readme">
+<meta property="og:description" content="Nobody reads the wall of text. Show them the thing. craft-readme is a Claude Code skill that rebuilds a README as a landing page and takes the screenshots itself.">
+<meta property="og:url" content="https://gr13nka.github.io/craft-readme/">
+<meta property="og:image" content="https://gr13nka.github.io/craft-readme/docs/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gr13nka.github.io/craft-readme/docs/images/og.png">
+<style>
+  html { background: #fff; color-scheme: light; }
+  body { margin: 0; padding: 32px 20px 96px; }
+  .markdown-body { max-width: 860px; margin: 0 auto; }
+  .markdown-body img { max-width: 100%; height: auto; }
+  @media (max-width: 600px) { body { padding: 20px 14px 64px; } }
+/* A faithful-enough GitHub .markdown-body (light), so a rendered README reads
+   as the real thing in a screenshot. Values track GitHub's primer-markdown. */
+.markdown-body {
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px 40px;
+}
+.markdown-body > *:first-child { margin-top: 0 !important; }
+.markdown-body > *:last-child { margin-bottom: 0 !important; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin: 24px 0 16px; font-weight: 600; line-height: 1.25;
+}
+.markdown-body h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+.markdown-body h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body p, .markdown-body blockquote, .markdown-body ul,
+.markdown-body ol, .markdown-body table, .markdown-body pre { margin: 0 0 16px; }
+.markdown-body a { color: #0969da; text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body strong { font-weight: 600; }
+.markdown-body img { max-width: 100%; box-sizing: content-box; vertical-align: middle; }
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 85%; padding: .2em .4em; margin: 0;
+  background: #eff1f3; border-radius: 6px;
+}
+.markdown-body pre {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 85%; line-height: 1.45;
+  padding: 16px; overflow: auto; background: #f6f8fa; border-radius: 6px;
+}
+.markdown-body pre code { padding: 0; background: transparent; font-size: 100%; }
+.markdown-body blockquote {
+  padding: 0 1em; color: #59636e; border-left: .25em solid #d1d9e0;
+}
+.markdown-body ul, .markdown-body ol { padding-left: 2em; }
+.markdown-body li { margin: .25em 0; }
+.markdown-body li > ul, .markdown-body li > ol { margin: .25em 0; }
+.markdown-body table { border-collapse: collapse; display: block; width: max-content; max-width: 100%; overflow: auto; }
+.markdown-body th, .markdown-body td { padding: 6px 13px; border: 1px solid #d1d9e0; }
+.markdown-body tr:nth-child(2n) { background: #f6f8fa; }
+.markdown-body hr { height: .25em; margin: 24px 0; background: #d1d9e0; border: 0; }
+.markdown-body div[align="center"] { text-align: center; }
+.markdown-body div[align="center"] h1 { border-bottom: 0; }
+
+</style>
+<article class="markdown-body"><!-- craft-readme: voice=deadpan -->
+<div align="center">
+<h1>craft-readme</h1>
+<p><em><strong>Nobody reads the wall of text. Show them the thing.</strong></em></p>
+<p>craft-readme is a Claude Code skill that rebuilds a README as a landing page and takes the screenshots itself.</p>
+<p><a href="LICENSE"><img alt="license MIT" src="https://img.shields.io/badge/license-MIT-6f6ac4?style=flat-square"></a> <a href="https://docs.claude.com/en/docs/claude-code"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-6f6ac4?style=flat-square"></a> <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-8b8b8b?style=flat-square"> <img alt="node 22+" src="https://img.shields.io/badge/node-22%2B-8b8b8b?style=flat-square"></p>
+<img src="docs/images/hero.png" alt="Before and after: a text-heavy spec-style README on the left, a short image-led landing page on the right" width="100%">
+</div>
+<p>Most READMEs are the same wall of text. Setup steps, an options table nobody opens, not one picture of the thing running.</p>
+<p>craft-readme cuts it down to a landing page: a screenshot, a short GIF, a quick start. The reference goes in a guide behind a link.</p>
+<h2>What it does</h2>
+<img src="docs/images/demo.gif" alt="A spec-style README wiping across into a short, image-led one" width="600">
+<p>The options and schemas move to  <code>docs/GUIDE.md</code> . A hero shot and a GIF go in, captured over headless Chromium with the corners cut out so they sit on either GitHub theme. <a href="docs/guide.html#the-capture-scripts">The full pipeline →</a></p>
+<h2>Use it with your agent</h2>
+<p>In Claude Code, from the project you want a README for:</p>
+<pre><code>/craft-readme</code></pre>
+<p>It reads the repo, picks the shots, takes them, writes the README and the guide, checks the links and images, and stops. You commit.</p>
+<h2>Install</h2>
+<p>Clone it where Claude Code keeps skills:</p>
+<pre><code>git clone https://github.com/gr13nka/craft-readme ~/.claude/skills/craft-readme</code></pre>
+<p>Node 22+ and any Chromium browser. No  <code>npm install</code> , there's nothing to install.</p>
+<h2>Run the scripts directly</h2>
+<p>The tools work on their own, without the skill:</p>
+<pre><code>node scripts/capture.mjs spec.json                        # web page → rounded PNG, or GIF
+node scripts/term.mjs run.txt --out cli.png --title app   # a transcript → terminal card
+node scripts/readme-shot.mjs README.md --out readme.png   # a README → how GitHub shows it
+node scripts/check-readme.mjs README.md --docs docs       # dead links, placeholders, budgets
+node scripts/check-voice.mjs README.md                    # "seamlessly", emoji, the wink; lints to the README's register
+node scripts/check-discovery.mjs README.md               # description, topics, alt text, the social card</code></pre>
+<h2>Example output</h2>
+<p>A README this made, rendered how GitHub shows it. Centred header, real badges, a hero and a GIF, the rest moved to a linked guide:</p>
+<img src="docs/images/example-output.png" alt="A rendered README: centred title, badge row, a hero screenshot, and the first section" width="100%">
+<h2>FAQ</h2>
+<p><strong>Playwright? ffmpeg?</strong> Neither. Node 22 has a WebSocket, that's the dependency list. GIFs are encoded in plain Node.</p>
+<p><strong>Can it render my README before I push?</strong> Yes. It reads the local file. GitHub doesn't need to see it first.</p>
+<p><strong>My project has no screenshots.</strong> It makes them. Web pages get driven in a headless browser, CLIs get a terminal card, and anything else, you hand it one image and it rounds the corners.</p>
+<p><strong>Will it eat my docs?</strong> No. They move to  <code>docs/GUIDE.md</code>  word for word, and a check proves nothing dropped out.</p>
+<p><strong>Will it read like a bot wrote it?</strong> There's a check for that. Emoji, "seamlessly", "feel free to", "pro tip", the joke in parentheses all fail it. What passes is dry.</p>
+<p><strong>My project isn't a joke.</strong> Then the README won't be one. Three registers: plain, deadpan, quiet. Say which, or it picks from the project. The pick goes on line one.</p>
+<h2>Docs</h2>
+<p>The rest is in <strong><a href="docs/guide.html">docs/GUIDE.md</a></strong>: <a href="docs/guide.html#install">install</a> · <a href="docs/guide.html#the-capture-scripts">the capture scripts</a> · <a href="docs/guide.html#the-checks">the checks</a> · <a href="docs/guide.html#the-voice">the voice</a> · <a href="docs/guide.html#being-found">being found</a>.</p>
+<h2>License</h2>
+<p>MIT. Fork it, rename it, ship it.</p></article>

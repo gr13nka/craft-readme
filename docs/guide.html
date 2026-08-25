@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>craft-readme — the full guide</title>
+<meta name="description" content="craft-readme — the full guide Everything the README leaves out: how the skill routes, what each capture script does, the four checks that keep the output honest, the voice, and the fields that decide whether anyone finds the repo at all.">
+<link rel="canonical" href="https://gr13nka.github.io/craft-readme/docs/guide.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="craft-readme — the full guide">
+<meta property="og:description" content="craft-readme — the full guide Everything the README leaves out: how the skill routes, what each capture script does, the four checks that keep the output honest, the voice, and the fields that decide whether anyone finds the repo at all.">
+<meta property="og:url" content="https://gr13nka.github.io/craft-readme/docs/guide.html">
+<meta property="og:image" content="https://gr13nka.github.io/craft-readme/docs/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gr13nka.github.io/craft-readme/docs/images/og.png">
+<style>
+  html { background: #fff; color-scheme: light; }
+  body { margin: 0; padding: 32px 20px 96px; }
+  .markdown-body { max-width: 860px; margin: 0 auto; }
+  .markdown-body img { max-width: 100%; height: auto; }
+  @media (max-width: 600px) { body { padding: 20px 14px 64px; } }
+/* A faithful-enough GitHub .markdown-body (light), so a rendered README reads
+   as the real thing in a screenshot. Values track GitHub's primer-markdown. */
+.markdown-body {
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px 40px;
+}
+.markdown-body > *:first-child { margin-top: 0 !important; }
+.markdown-body > *:last-child { margin-bottom: 0 !important; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin: 24px 0 16px; font-weight: 600; line-height: 1.25;
+}
+.markdown-body h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+.markdown-body h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid #d1d9e0; }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body p, .markdown-body blockquote, .markdown-body ul,
+.markdown-body ol, .markdown-body table, .markdown-body pre { margin: 0 0 16px; }
+.markdown-body a { color: #0969da; text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body strong { font-weight: 600; }
+.markdown-body img { max-width: 100%; box-sizing: content-box; vertical-align: middle; }
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 85%; padding: .2em .4em; margin: 0;
+  background: #eff1f3; border-radius: 6px;
+}
+.markdown-body pre {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 85%; line-height: 1.45;
+  padding: 16px; overflow: auto; background: #f6f8fa; border-radius: 6px;
+}
+.markdown-body pre code { padding: 0; background: transparent; font-size: 100%; }
+.markdown-body blockquote {
+  padding: 0 1em; color: #59636e; border-left: .25em solid #d1d9e0;
+}
+.markdown-body ul, .markdown-body ol { padding-left: 2em; }
+.markdown-body li { margin: .25em 0; }
+.markdown-body li > ul, .markdown-body li > ol { margin: .25em 0; }
+.markdown-body table { border-collapse: collapse; display: block; width: max-content; max-width: 100%; overflow: auto; }
+.markdown-body th, .markdown-body td { padding: 6px 13px; border: 1px solid #d1d9e0; }
+.markdown-body tr:nth-child(2n) { background: #f6f8fa; }
+.markdown-body hr { height: .25em; margin: 24px 0; background: #d1d9e0; border: 0; }
+.markdown-body div[align="center"] { text-align: center; }
+.markdown-body div[align="center"] h1 { border-bottom: 0; }
+
+</style>
+<article class="markdown-body"><h1>craft-readme — the full guide</h1>
+<p>Everything the <a href="../index.html">README</a> leaves out: how the skill routes, what each capture script does, the four checks that keep the output honest, the voice, and the fields that decide whether anyone finds the repo at all.</p>
+<ul><li><a href="#install">Install</a></li><li><a href="#how-the-skill-works">How the skill works</a></li><li><a href="#the-capture-scripts">The capture scripts</a></li><li><a href="#the-shot-spec">The shot spec</a></li><li><a href="#the-terminal-card">The terminal card</a></li><li><a href="#the-checks">The checks</a></li><li><a href="#the-voice">The voice</a></li><li><a href="#being-found">Being found</a></li><li><a href="#the-pages-site">The Pages site</a></li><li><a href="#what-it-enforces">What it enforces</a></li><li><a href="#requirements">Requirements</a></li></ul>
+<h2>Install</h2>
+<pre><code>git clone https://github.com/gr13nka/craft-readme ~/.claude/skills/craft-readme</code></pre>
+<p>Claude Code discovers skills under  <code>~/.claude/skills/</code> . Once cloned,  <code>/craft-readme</code>  is available in any session. The scripts also run standalone from anywhere with  <code>node</code> .</p>
+<h2>How the skill works</h2>
+<p>It is a router.  <code>SKILL.md</code>  hands to one of three workflows: build by default on an explicit  <code>/craft-readme</code> , and it asks which only when it auto-triggered from a README mention:</p>
+<ul><li><strong>build-readme</strong> — audit the repo, storyboard the shots, capture them, write  <code>README.md</code> </li></ul>
+<p>  and  <code>docs/GUIDE.md</code> , verify, hand off.</p>
+<ul><li><strong>capture-media</strong> — the media path on its own (web, CLI, or user-supplied).</li><li><strong>tighten-prose</strong> — the bloat pass, then the voice pass, over an existing README.</li></ul>
+<p>The reference files ( <code>references/</code> ) carry the durable knowledge: the section order and word budgets, the voice, the badge truth conditions, the media rules, and the capture traps. The skill never commits — it ends by pointing at  <code>/finish-session</code> .</p>
+<h2>The capture scripts</h2>
+<p>All in  <code>scripts/</code> , zero-dependency Node, run with  <code>node</code>  alone.</p>
+<table><thead><tr><th>Script</th><th>Does</th></tr></thead><tbody><tr><td> <code>capture.mjs spec.json</code> </td><td>drives a headless page from a JSON spec → a rounded PNG, or a GIF/APNG when the spec has a  <code>record</code>  block</td></tr><tr><td> <code>term.mjs transcript.txt</code> </td><td>renders a One Dark terminal card from a transcript → still or typed-out animation</td></tr><tr><td> <code>round.mjs in.png out.png</code> </td><td>cuts transparent rounded corners on an existing image (or a frames directory with  <code>--batch</code> )</td></tr><tr><td> <code>encode.mjs frames/ out.gif</code> </td><td>frames → GIF or APNG, ffmpeg-free</td></tr><tr><td> <code>check-readme.mjs</code> </td><td>fails on dead links, broken anchors, placeholders, oversized images</td></tr><tr><td> <code>check-coverage.mjs</code> </td><td>proves a restructure moved prose verbatim</td></tr><tr><td> <code>check-voice.mjs</code> </td><td>fails on the vocabulary and the winks that mark prose as machine-written; warns on the structural tells; lints to the register the README declares</td></tr><tr><td> <code>serve.mjs dir</code> </td><td>a zero-dependency static server, used internally and standalone</td></tr></tbody></table>
+<p>The GIF encoder is pure Node — a median-cut palette (255 colours plus a transparent slot), Floyd–Steinberg dithering, and transparent frame-differencing against an undisposed canvas — because ffmpeg cannot be assumed present and a dark scene with soft glows bands hard without dithering.</p>
+<h2>The shot spec</h2>
+<p> <code>capture.mjs</code>  reads a small JSON spec.  <code>templates/shot-spec.json</code>  is a worked example.</p>
+<pre><code>{
+  "serve": "./",
+  "viewport": { "width": 1400, "height": 900, "dsf": 2 },
+  "settle": 2000,
+  "steps": [
+    { "eval": "document.querySelector('.scene').scrollTop = 630" },
+    { "click": ".marker", "wait": 1400 },
+    { "hover": [478, 618], "wait": 500 }
+  ],
+  "clip": { "selector": ".panel", "pad": 16 },
+  "radius": 16,
+  "out": "docs/images/hero.png",
+  "record": { "trigger": { "click": ".play" }, "duration": 3600, "fps": 20, "slow": 3 }
+}</code></pre>
+<p>Step verbs are  <code>eval</code> ,  <code>click</code> ,  <code>hover</code> ,  <code>wait</code> . A cache-disabled context, a fresh browser profile, a free port,  <code>readyState</code>  polling,  <code>document.fonts.ready</code> , a transparent background, and a built-in static server (when  <code>serve</code>  is set) are always on — they are the traps that otherwise cost a session to rediscover.  <code>--probe "sel1,sel2"</code>  prints element boxes so a  <code>clip</code>  can be chosen without guessing;  <code>--set key=value</code>  overrides any field.</p>
+<p>For a short animation,  <code>record.slow</code>  records in slow motion and resamples to real time: clipped screenshots arrive at roughly eight a second, too coarse for a motion under two seconds, so the animation clock and the page's own timers are stretched together and the frames are resampled back.</p>
+<h2>The terminal card</h2>
+<p>For a CLI tool the hero is a terminal, drawn by  <code>term.mjs</code>  from a transcript:</p>
+<pre><code>$ some command
+its real output
+~ 800</code></pre>
+<p>A  <code>$ </code> -prefixed line is a command (typed out in the animation); other lines are output;  <code>~ 800</code>  is an 800 ms pause. A subset of ANSI SGR colour is honoured, so real coloured output pastes in. The card carries its own One Dark background so its transparent rounded corners still read as a terminal on any page. Never invent output — paste a real run or  <code>--help</code> .</p>
+<h2>The checks</h2>
+<pre><code>node scripts/check-readme.mjs README.md --docs docs
+node scripts/check-coverage.mjs --old &lt;(git show HEAD:README.md) --new README.md --new docs/GUIDE.md
+node scripts/check-voice.mjs README.md
+node scripts/check-discovery.mjs README.md</code></pre>
+<p> <code>check-readme</code>  fails, with the exact line, on: a relative link or image whose target is missing; an in-page  <code>#anchor</code>  with no matching heading (GitHub's own slug rule); a placeholder left in (an empty list item, a bare  <code>…</code> , a  <code>TODO</code> , a  <code>:owner</code> -style path); an image over budget (1.5 MB a still, 3 MB an animation); and a command in a fenced block that names a repo file which is not there.</p>
+<p> <code>check-coverage</code>  takes every substantial line of the old README and checks it survives somewhere in the new files, so a restructure cannot paraphrase content away. Pass  <code>--allow</code>  for the lines you meant to drop.</p>
+<p> <code>check-voice</code>  reads the prose only (fenced code, inline code, quoted mentions, HTML, URLs and badges are skipped) and reports each hit with its line. Errors: marketing adjectives ( <code>seamless</code> ,  <code>leverage</code> ,  <code>elegant</code> ), claim adjectives without a number ( <code>powerful</code> ,  <code>lightweight</code> ), softeners ( <code>simply</code> ,  <code>easily</code> ,  <code>with ease</code> ), connective tissue ( <code>whether you're</code> ,  <code>designed to</code> ,  <code>making it easy to</code> ,  <code>additionally</code> ), boilerplate ( <code>Welcome to</code> ,  <code>Feel free to</code> ,  <code>Happy coding</code> ,  <code>Contributions are welcome</code> ), emoji, exclamation marks, a bold-lead-in features list, and the winks ( <code>(yes, really)</code> ,  <code>spoiler alert</code> ,  <code>pro tip</code> ,  <code>™</code> ,  <code>/s</code> ). Warnings: an em-dash, a semicolon, a rule-of-three list, "not X, but Y", a participial payoff, a  <code>Why X?</code>  heading, three sentences of one length, three sentences opening on one word, a Title Case heading. Errors fail it;  <code>--strict</code>  makes warnings fail too. The lists are at the top of the script.</p>
+<p>It lints to a register. The README declares one on its first line ( <code>&lt;!-- craft-readme: voice=quiet --&gt;</code> );  <code>--voice deadpan|plain|quiet</code>  overrides it; neither → plain.  <code>plain</code>  lets a claim adjective through as a warning when the line carries its number or a link, turns  <code>!</code>  and bold-label bullets into warnings (three  <code>!</code>  in a file is an error again), and stops warning on "Note that", question headings, Contributing-style and Credits headings and sentence rhythm.  <code>quiet</code>  stops warning on "which means" / ", so you can" and on a Credits heading, and warns on a jab (nobody, you won't, dead, garbage).  <code>deadpan</code>  is the full set. The header names the register it used; an unmarked README lints as plain until it gets its marker, and the header says  <code>(plain, no marker)</code> .</p>
+<p> <code>check-discovery</code>  asks the question the other three do not: whether anyone arrives. In the file it checks the  <code># Name</code>  heading (the README's first  <code>#</code>  is the repo page's only  <code>&lt;h1&gt;</code> , and a header built from a centred logo image alone leaves the page without one), alt text on every image, and that the first sentences name the project. Over  <code>gh</code>  it checks the repo's description, its topics, the homepage and whether a custom social preview is set. Errors: no  <code>&lt;h1&gt;</code> , an image with no  <code>alt=</code> , an empty description, one over 350 characters, no topics, a topic that is not a valid slug. Warnings: a badge row above the first sentence, a topic almost nobody else uses, a missing social preview, a run-together repo name.  <code>--no-remote</code>  runs the file checks alone. The description is fed through  <code>check-voice</code> 's own rules, in the register the README declares, because a description is prose too.</p>
+<h2>The voice</h2>
+<p> <code>references/voice.md</code> . Three registers over one core. The core is what keeps prose from reading machine-written: every section written flat first, none of the machine tells, cut to the bone, each fact once, no emoji, no exclamation marks, no joke ever labelled. The register is one move applied after the flat draft. <strong>plain</strong> (ripgrep, uv, fd; the default) licenses every claim with a number and concedes the limit early. <strong>deadpan</strong> (bash.org; a dev tool with a thesis) leaves bare the one fact per screen that is already funny. <strong>quiet</strong> (a meditation app's README) states the consequence and withholds the jab. The skill picks by the user's words, then the project's own doctrine, then what it is and who reads it; plain when nothing decides. The pick goes on the README's first line as a marker and  <code>check-voice</code>  lints to it. The reference carries the choosing ladder, the mechanics of each register with quoted lines from real READMEs, the machine's imitation of each, and section-scale rewrites in all three.</p>
+<h2>What it enforces</h2>
+<p>The prose rules live in  <code>references/readme-anatomy.md</code> . The load-bearing one: a sentence earns its place only if it says something the image above it does not already show <strong>and</strong> something the reader can act on. A paragraph narrating a GIF is bloat. Reference detail — option tables, schemas, setup steps — belongs in this guide, not the README.</p>
+<h2>Being found</h2>
+<p> <code>references/discoverability.md</code> . One fact reorders the rest: <strong>GitHub's repo search does not read your README.</strong> It covers the repository name, description and topics, unless the searcher types  <code>in:readme</code> . <strong>Google does read it</strong>, in full, and ignores the topics. They are two different games, and the description is the only field that wins both — which is awkward, because it is the field most repos leave empty, and with it empty the page title, the meta description and every Slack and X preview fall back to "Contribute to owner/repo development by creating an account on GitHub".</p>
+<p>So the skill writes the description from the finished slogan (front-loaded — roughly the first 35 characters survive in a Google title after the  <code>GitHub - owner/repo: </code>  prefix), picks five to twelve topics and verifies each is a slug other repos actually use, sets the homepage, and captures a 1280x640 social card. Topics match as exact atomic slugs: no stemming, no splitting, no prefix, so  <code>command</code>  never matches  <code>command-line-tool</code>  and an invented slug never fires.</p>
+<p>Moving reference detail into this guide costs nothing here. A  <code>blob</code>  page like this one is separately indexable by Google; it keeps the README short without hiding the content.</p>
+<p>What the skill will not do: stuff keywords (GitHub's search never reads the README, and Google demotes it), hide text (GitHub strips HTML comments from the rendered DOM and sanitises  <code>style</code> , so it cannot be done), or chase image filenames ( <code>/raw/</code>  is blocked in robots.txt and external images are proxied through hashed camo URLs — alt text is the only description of an image that survives). Two things it names but leaves to you: pinning the repo on your profile, and getting listed on the relevant awesome-list. github.com publishes no sitemap and a profile page links only pinned repos, so for an unlinked repo pinning is the difference between one crawl path and none.</p>
+<h2>The Pages site</h2>
+<p> <code>index.html</code>  and  <code>docs/guide.html</code>  are generated from  <code>README.md</code>  and this file by  <code>scripts/site.mjs</code> , which reuses  <code>markdown.mjs</code>  and  <code>github-readme.css</code> . No Jekyll, no front matter, nothing to install:</p>
+<pre><code>node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
+  --base https://gr13nka.github.io/craft-readme</code></pre>
+<p>It writes each page where its relative paths already resolve, rewrites links between the markdown files it generates, derives the meta description from the opening prose, and emits the canonical and og: tags. Regenerate after editing either markdown file; the HTML is committed, so it drifts if you forget.</p>
+<h2>Requirements</h2>
+<ul><li><strong>Node 22+</strong> — it uses the global  <code>WebSocket</code>  to speak the DevTools Protocol, which is</li></ul>
+<p>  what keeps the toolkit dependency-free.</p>
+<ul><li><strong>A Chromium-based browser</strong> — Chromium, Chrome, Edge or Brave, auto-discovered; set</li></ul>
+<p>   <code>CHROME=/path/to/binary</code>  to override.</p>
+<ul><li>No  <code>npm install</code> , no ffmpeg.</li></ul></article>
