@@ -37,6 +37,7 @@ const DESC_CARD = 150;         // where the social card truncates
 const DESC_MIN = 25;           // below this it cannot carry a searchable phrase
 const TOPICS_MAX = 20;         // API limit
 const TOPICS_WANT = 3;         // below this the sidebar says nothing
+const SNIPPET = 200;           // roughly the prose Google renders as the snippet
 const OG_BYTES = 1_000_000;    // GitHub's documented limit for a social preview
 const OG_W = 1280, OG_H = 640; // its documented best-display size
 
@@ -123,8 +124,9 @@ export async function checkDiscovery(readmePath, { root, remote = true } = {}) {
   }
 
   /* Google's snippet comes primarily from page content, so the first prose on the page
-     is what a searcher reads. Warn, not error: which paragraph names the project is a
-     voice decision, and three is enough room for a slogan to land first. */
+     is what a searcher reads. The test is the snippet window itself rather than a count
+     of paragraphs — a paragraph count is arbitrary, and what ships is a length. Warn,
+     not error: where the name lands is a voice decision, and a slogan may come first. */
   const paras = paragraphs(text);
   if (!paras.length) add(1, 'error', 'no-prose', 'no prose paragraph', 'the page has no sentence for Google to use as a snippet');
   else {
@@ -134,9 +136,11 @@ export async function checkDiscovery(readmePath, { root, remote = true } = {}) {
          the character class this builds and matches it as literal text. */
       const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const re = new RegExp(esc.replace(/[-_]/g, '[-_ ]?'), 'i');
-      const where = paras.slice(0, 3).findIndex((p) => re.test(p.text));
-      if (where < 0)
-        add(paras[0].n, 'warn', 'unnamed', paras[0].text, `"${name}" is not named in the first three paragraphs; the snippet will not say what this is`);
+      let win = '';
+      for (const p of paras) { win += (win ? ' ' : '') + p.text; if (win.length >= SNIPPET) break; }
+      const shown = win.slice(0, SNIPPET);
+      if (!re.test(shown))
+        add(paras[0].n, 'warn', 'unnamed', shown, `"${name}" is not in the first ${SNIPPET} characters of prose — the snippet a searcher reads will not name it`);
     }
     /* A badge row above the first sentence pushes that sentence down the page. */
     const badge = lines.findIndex((l) => /img\.shields\.io|badge\.fury|\[!\[/.test(l));

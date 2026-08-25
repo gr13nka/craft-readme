@@ -151,7 +151,8 @@ gets its marker, and the header says `(plain, no marker)`.
 `check-discovery` asks the question the other three do not: whether anyone arrives. In the
 file it checks the `# Name` heading (the README's first `#` is the repo page's only `<h1>`,
 and a header built from a centred logo image alone leaves the page without one), alt text on
-every image, and that the first sentences name the project. Over `gh` it checks the repo's
+every image, and that the project is named within the first 200 characters of prose — the
+window a search snippet is drawn from, which is a length rather than a count of paragraphs. Over `gh` it checks the repo's
 description, its topics, the homepage and whether a custom social preview is set. Errors: no
 `<h1>`, an image with no `alt=`, an empty description, one over 350 characters, no topics, a
 topic that is not a valid slug. Warnings: a badge row above the first sentence, a topic
