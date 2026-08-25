@@ -223,8 +223,14 @@ node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
 
 It writes each page where its relative paths already resolve, rewrites links between the
 markdown files it generates, derives the meta description from the opening prose, and emits
-the canonical and og: tags. Regenerate after editing either markdown file; the HTML is
-committed, so it drifts if you forget.
+the canonical and og: tags. Regenerate after editing either markdown file. The HTML is committed, so it goes stale the
+moment a source changes — `--check` rebuilds in memory and compares against what is on
+disk, exiting 1 and naming the stale page:
+
+```bash
+node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
+  --base https://gr13nka.github.io/craft-readme --check
+```
 
 ## Requirements
 

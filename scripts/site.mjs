@@ -10,6 +10,7 @@
  *
  *   node site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
  *     --base https://owner.github.io/repo [--root .]
+ *   node site.mjs <same args> --check      → exit 1 if the committed HTML is stale
  *
  * Pages are written where their relative paths already resolve, so images and anchors
  * keep working without rewriting: index.html at the repo root sees docs/images/*, and
@@ -74,10 +75,10 @@ ${css}
 <article class="markdown-body">${body}</article>
 `;
 
-export async function buildSite(pairs, { root = '.', base = '' } = {}) {
+export async function buildSite(pairs, { root = '.', base = '', check = false } = {}) {
   const css = await readFile(join(HERE, 'github-readme.css'), 'utf8');
   const map = new Map(pairs.map(([src, out]) => [resolve(root, src), resolve(root, out)]));
-  const written = [];
+  const written = [], stale = [];
 
   for (const [srcAbs, outAbs] of map) {
     const md = await readFile(srcAbs, 'utf8');
@@ -100,9 +101,20 @@ export async function buildSite(pairs, { root = '.', base = '' } = {}) {
       canonical: canonical.replace(/\/index\.html$/, '/'),
       image,
     });
-    await writeFile(outAbs, html);
-    written.push({ out: relative(resolve(root), outAbs), bytes: Buffer.byteLength(html) });
+    const rel = relative(resolve(root), outAbs);
+    if (check) {
+      /* The committed HTML is an artifact of the markdown, so it goes stale the moment
+         someone edits a source file and forgets to regenerate. Comparing the rebuild
+         against what is on disk is the only thing that catches that. */
+      let current = null;
+      try { current = await readFile(outAbs, 'utf8'); } catch { /* missing counts as stale */ }
+      if (current !== html) stale.push({ out: rel, why: current === null ? 'not generated yet' : 'out of date with its markdown' });
+    } else {
+      await writeFile(outAbs, html);
+      written.push({ out: rel, bytes: Buffer.byteLength(html) });
+    }
   }
+  if (check) return { stale };
   /* No Jekyll: the HTML is final, and this stops GitHub rebuilding it. */
   await writeFile(join(resolve(root), '.nojekyll'), '');
   return written;
@@ -116,9 +128,15 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     .filter((a, i) => !a.startsWith('--') && (bi < 0 || i !== bi + 1) && (ri < 0 || i !== ri + 1))
     .map((a) => { const [s, o] = a.split(':'); return [s, o ?? s.replace(/\.md$/i, '.html')]; });
   if (!pairs.length) { console.error('usage: site.mjs README.md:index.html [docs/GUIDE.md:docs/guide.html] --base https://owner.github.io/repo'); process.exit(1); }
-  const written = await buildSite(pairs, {
+  const check = args.includes('--check');
+  const res = await buildSite(pairs, {
     root: ri >= 0 ? args[ri + 1] : '.',
     base: bi >= 0 ? args[bi + 1].replace(/\/$/, '') : '',
+    check,
   });
-  console.log(JSON.stringify({ written }));
+  if (!check) { console.log(JSON.stringify({ written: res })); process.exit(0); }
+  if (!res.stale.length) { console.log('site: in sync with the markdown'); process.exit(0); }
+  console.error(`site: ${res.stale.length} page(s) stale — regenerate and commit`);
+  for (const s of res.stale) console.error(`  ${s.out}: ${s.why}`);
+  process.exit(1);
 }

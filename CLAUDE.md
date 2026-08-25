@@ -91,7 +91,8 @@ when editing them.
 from `README.md` and `docs/GUIDE.md` by `scripts/site.mjs`, using this repo's own
 `markdown.mjs` and `github-readme.css` — no Jekyll, no front matter in the sources, same
 zero-dependency rule as everything else. **Edit the markdown, then regenerate and commit
-both.** It exists because a docs page tends to outrank the repo page it documents, and a
+both** — `--check` rebuilds in memory and diffs against what is committed, so the drift
+cannot ship quietly. It exists because a docs page tends to outrank the repo page it documents, and a
 Pages site is the only surface where `<title>`, the meta description and the og: tags are
 ours to set. Pages serves from the repo root, so `index.html` sees `docs/images/*` and
 `docs/guide.html` sees `../` without any path rewriting; only markdown-to-markdown links
@@ -105,7 +106,10 @@ No test suite. `node --check scripts/*.mjs`, then run the skill's own gates on i
 README.md` (the header must read `(deadpan)`, from the marker), and `node
 scripts/check-discovery.mjs README.md` (`--no-remote` when `gh` is unavailable). After any
 README or GUIDE edit, `node scripts/site.mjs README.md:index.html
-docs/GUIDE.md:docs/guide.html --base https://gr13nka.github.io/craft-readme`. When touching
+docs/GUIDE.md:docs/guide.html --base https://gr13nka.github.io/craft-readme`, and
+`node scripts/site.mjs <same args> --check` to prove it is in sync — that one is the gate,
+and it is the only check here that fails on something you forgot rather than something you
+wrote. When touching
 `check-voice.mjs`, run fixtures under all three `--voice` values: a machine-written paragraph
 errors in each, a ripgrep-style paragraph passes plain with warnings only, a jab warns under
 quiet only. Smoke-test a capture against any

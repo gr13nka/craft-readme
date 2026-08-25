@@ -134,7 +134,9 @@ node scripts/check-discovery.mjs README.md</code></pre>
 <p> <code>index.html</code>  and  <code>docs/guide.html</code>  are generated from  <code>README.md</code>  and this file by  <code>scripts/site.mjs</code> , which reuses  <code>markdown.mjs</code>  and  <code>github-readme.css</code> . No Jekyll, no front matter, nothing to install:</p>
 <pre><code>node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
   --base https://gr13nka.github.io/craft-readme</code></pre>
-<p>It writes each page where its relative paths already resolve, rewrites links between the markdown files it generates, derives the meta description from the opening prose, and emits the canonical and og: tags. Regenerate after editing either markdown file; the HTML is committed, so it drifts if you forget.</p>
+<p>It writes each page where its relative paths already resolve, rewrites links between the markdown files it generates, derives the meta description from the opening prose, and emits the canonical and og: tags. Regenerate after editing either markdown file. The HTML is committed, so it goes stale the moment a source changes —  <code>--check</code>  rebuilds in memory and compares against what is on disk, exiting 1 and naming the stale page:</p>
+<pre><code>node scripts/site.mjs README.md:index.html docs/GUIDE.md:docs/guide.html \
+  --base https://gr13nka.github.io/craft-readme --check</code></pre>
 <h2>Requirements</h2>
 <ul><li><strong>Node 22+</strong> — it uses the global  <code>WebSocket</code>  to speak the DevTools Protocol, which is</li></ul>
 <p>  what keeps the toolkit dependency-free.</p>
