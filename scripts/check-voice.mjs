@@ -244,8 +244,10 @@ const measured = (L) => /\d/.test(L.text) || /(?<!!)\[[^\]]+\]\([^)]+\)/.test(L.
 
 /* ---- the check ----------------------------------------------------------- */
 
-export async function checkVoice(file, { voice } = {}) {
-  const src = await readFile(file, 'utf8');
+/* The rules over a string. Split out from checkVoice so a caller whose prose is not a
+   file — the repo description, in check-discovery.mjs — lints against the same
+   registers rather than growing a second copy of them. */
+export function checkVoiceText(src, { voice } = {}) {
   const marker = readMarker(src);
   let v = voice ?? marker.voice ?? DEFAULT_VOICE;
   const source = voice ? 'flag' : marker.voice ? 'marker' : 'default';
@@ -334,6 +336,10 @@ export async function checkVoice(file, { voice } = {}) {
 
   found.sort((a, b) => a.line - b.line || (a.level === b.level ? 0 : a.level === 'error' ? -1 : 1));
   return { voice: v, source, marker: marker.voice, findings: found };
+}
+
+export async function checkVoice(file, { voice } = {}) {
+  return checkVoiceText(await readFile(file, 'utf8'), { voice });
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

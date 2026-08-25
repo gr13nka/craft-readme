@@ -43,7 +43,15 @@ theme, whichever it is. Check on white and on `#0d1117`.
 **Badges are true statements.** Each has a truth condition in
 `references/badges.md`; verify it, never hand-write a status.
 
-**Never commit.** End by listing changed files and pointing at `/finish-session`.
+**Findable, not just readable.** GitHub's repo search does not read the README — name,
+description and topics only. Google reads the README and ignores the topics. The
+description is the only field that wins both, and most repos leave it blank. The skill
+writes it, the topics and the homepage with `gh repo edit`, captures the 1280x640 social
+card, and lints all of it. `references/discoverability.md`. No keyword stuffing: it buys
+nothing on either surface and fails the voice check.
+
+**Never commit.** End by listing changed files and pointing at `/finish-session`. Repo
+metadata is the exception — `gh repo edit` is applied, after showing current vs proposed.
 
 **Voice is part of the job.** A README that reads as machine-written undoes the rest of the
 work. Three registers, one core. Plain (ripgrep, uv; a library or CLI used by strangers,
@@ -98,6 +106,7 @@ word → the workflow picks from the project, plain when nothing decides.
 | "tighten", "bloated", "too long", "trim" only | `workflows/tighten-prose.md` |
 | "sounds AI-written / like an LLM / too corporate", "make it sound human" | `workflows/tighten-prose.md` |
 | "make it calmer / more formal / less sarcastic / change the tone" | `workflows/tighten-prose.md` (a re-voice) |
+| "nobody can find it", "add topics / a description / the About box", "social preview", "SEO" | `workflows/discoverability.md` |
 
 **After reading the workflow, follow it exactly.**
 </routing>
@@ -108,6 +117,7 @@ word → the workflow picks from the project, plain when nothing decides.
 | build-readme.md | Audit → storyboard → capture → write README + GUIDE → verify → hand off |
 | capture-media.md | Web (capture.mjs), CLI (term.mjs), or user-supplied (round.mjs) media |
 | tighten-prose.md | The bloat pass, then the voice pass, on an existing README |
+| discoverability.md | Description, topics, homepage, the social card, and the two one-clicks |
 </workflows_index>
 
 <reference_index>
@@ -117,6 +127,7 @@ All in `references/`:
 - badges.md — shields URLs and the truth condition for each badge
 - media-rules.md — transparent corners, sizes, GIF vs APNG, formats GitHub renders, the push trick
 - capture-traps.md — what the scripts handle for you, and the knobs you still own
+- discoverability.md — description, topics, social card, alt text; what GitHub search and Google each read, and what is not worth doing
 </reference_index>
 
 <templates_index>
@@ -124,6 +135,8 @@ All in `templates/`:
 - readme-template.md — the landing page with `{{placeholders}}` and inline guidance
 - guide-template.md — `docs/GUIDE.md` with a ToC and an optional-section skeleton
 - shot-spec.json — a worked capture spec (a still and a recording)
+- og-card.html — the 1280x640 social preview, text from the query string
+- og-spec.json — its capture spec; no `radius`, because this card stays opaque
 </templates_index>
 
 <scripts_index>
@@ -136,6 +149,7 @@ All in `scripts/`, run with `node`:
 - `check-readme.mjs README.md --docs docs` — links, anchors, placeholders, image budgets, real commands
 - `check-coverage.mjs --old old.md --new README.md --new docs/GUIDE.md [--allow pat]` — nothing lost in a move
 - `check-voice.mjs README.md [--voice deadpan|plain|quiet] [--strict]` — the machine tells, linted to the register in the README's marker (or `--voice`; plain if neither): marketing words, softeners, boilerplate, emoji, winks error; em-dashes, triplets, antithesis, rhythm warn; plain licenses a claim by its number, quiet warns on a jab
+- `check-discovery.mjs README.md [--no-remote]` — the `# Name` heading, alt text, the first sentence; and over `gh`, the repo's description (linted to the README's register), topics (each verified to be a real slug), homepage and social preview
 - `serve.mjs dir [--port N]` — zero-dep static server (also used internally)
 </scripts_index>
 
@@ -151,6 +165,7 @@ A terse pre-flight, drawn from the principles above plus two things they do not 
 - README ≤ ~100 lines, canonical section order, animated demo under the header
 - ≥ 1 still and 1 animation in `docs/images/`, transparent corners, within budget
 - all reference detail in `docs/GUIDE.md`, reached by anchor links
-- `check-readme` and `check-voice` clean, in the README's declared register; `check-coverage` clean when restructuring
+- `check-readme`, `check-voice` and `check-discovery` clean, in the README's declared register; `check-coverage` clean when restructuring
+- description, topics and the social card set; the manual upload and the two one-clicks stated
 - nothing committed; the closing message points at `/finish-session`
 </success_criteria>

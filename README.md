@@ -3,12 +3,12 @@
 
 # craft-readme
 
+***Nobody reads the wall of text. Show them the thing.***
+
 [![license MIT](https://img.shields.io/badge/license-MIT-6f6ac4?style=flat-square)](LICENSE)
 [![Claude Code skill](https://img.shields.io/badge/Claude_Code-skill-6f6ac4?style=flat-square)](https://docs.claude.com/en/docs/claude-code)
 ![zero dependencies](https://img.shields.io/badge/dependencies-0-8b8b8b?style=flat-square)
 ![node 22+](https://img.shields.io/badge/node-22%2B-8b8b8b?style=flat-square)
-
-***Nobody reads the wall of text. Show them the thing.***
 
 <img src="docs/images/hero.png" alt="Before and after: a text-heavy spec-style README on the left, a short image-led landing page on the right" width="100%">
 
@@ -60,6 +60,7 @@ node scripts/term.mjs run.txt --out cli.png --title app   # a transcript → ter
 node scripts/readme-shot.mjs README.md --out readme.png   # a README → how GitHub shows it
 node scripts/check-readme.mjs README.md --docs docs       # dead links, placeholders, budgets
 node scripts/check-voice.mjs README.md                    # "seamlessly", emoji, the wink; lints to the README's register
+node scripts/check-discovery.mjs README.md               # description, topics, alt text, the social card
 ```
 
 ## Example output
@@ -93,7 +94,7 @@ quiet. Say which, or it picks from the project. The pick goes on line one.
 ## Docs
 
 The rest is in **[docs/GUIDE.md](docs/GUIDE.md)**:
-[install](docs/GUIDE.md#install) · [the capture scripts](docs/GUIDE.md#the-capture-scripts) · [the spec format](docs/GUIDE.md#the-shot-spec) · [the checks](docs/GUIDE.md#the-checks) · [the voice](docs/GUIDE.md#the-voice).
+[install](docs/GUIDE.md#install) · [the capture scripts](docs/GUIDE.md#the-capture-scripts) · [the checks](docs/GUIDE.md#the-checks) · [the voice](docs/GUIDE.md#the-voice) · [being found](docs/GUIDE.md#being-found).
 
 ## License
 

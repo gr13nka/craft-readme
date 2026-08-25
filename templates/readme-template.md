@@ -4,19 +4,22 @@
 
 <!-- optional mark: <img src="docs/images/logo.svg" width="72" alt=""> -->
 
+<!-- keep a real "# Name": it is the page's only <h1> and one of Google's title sources. A logo image alone leaves the page without one. references/discoverability.md -->
 # {{Name}}
+
+<!-- the slogan: an opinion with a verb in deadpan and quiet; the category and the mechanism in plain. A feature list is not a slogan. references/voice.md -->
+**{{Slogan — what it is, ≤ 8 words}}**
+
+<!-- this line is what Google shows as the snippet, so it sits above the badges, not below them -->
+{{One plain line — what it does, ≤ 20 words.}}
 
 <!-- badge row — only true ones; see references/badges.md. Owner/repo from the remote. -->
 [![live](https://img.shields.io/badge/live-{{host}}-6f6ac4?style=flat-square)]({{live-url}})
 [![license {{SPDX}}](https://img.shields.io/badge/license-{{SPDX}}-6f6ac4?style=flat-square)](LICENSE)
 
-<!-- the slogan: an opinion with a verb in deadpan and quiet; the category and the mechanism in plain. A feature list is not a slogan. references/voice.md -->
-**{{Slogan — what it is, ≤ 8 words}}**
-
-{{One plain line — what it does, ≤ 20 words.}}
-
 **[{{Live demo →}}]({{live-url}})** · [Docs](docs/GUIDE.md)
 
+<!-- alt text is the only description of an image that survives: /raw/ is robots-blocked and externals go through camo -->
 <img src="docs/images/hero.png" alt="{{what the hero shows}}" width="100%">
 
 </div>

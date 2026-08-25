@@ -9,13 +9,15 @@ Top to bottom. Every section is optional except the header; skip any that has
 nothing true to say.
 
 1. **Centred header** — `<div align="center"> … </div>`:
-   - optional mark (a repo-relative SVG/PNG at ~72px), then `# Name`
-   - badge row (see `references/badges.md`) — only true ones
+   - optional mark (a repo-relative SVG/PNG at ~72px), then `# Name` — keep the
+     markdown heading even under a logo; it is the page's only `<h1>`
    - **bold slogan**, ≤ 8 words, what it is in one breath — an opinion in deadpan
      and quiet, category + mechanism in plain
    - one plain sub-slogan line, ≤ 20 words, what it does
+   - badge row (see `references/badges.md`) — only true ones, and **below** the
+     sub-slogan: the first sentence on the page is the one a search engine quotes
    - a links row: live demo · docs · anything else, ` · `-separated
-   - the hero image, `<img … width="100%">`
+   - the hero image, `<img … width="100%">`, with alt text that says what it shows
    - for a doc/README tool, a **before/after** render of a real README (a messy
      spec beside the clean landing page) is a stronger hero than a screenshot —
      see `references/media-rules.md`
@@ -76,6 +78,16 @@ a number and concedes the limit, quiet states the consequence and withholds the 
 README declares it on line 1: `<!-- craft-readme: voice=quiet -->`. `scripts/check-voice.mjs`
 reads the marker and lints to it.
 </voice>
+
+<discoverability>
+The README decides whether a visitor stays. The repo's description, topics, homepage
+and social preview decide whether one arrives, and none of them is a line in this file.
+`references/discoverability.md` carries them, with the fact that reorders the rest:
+GitHub's repo search does not read the README at all — name, description and topics
+only — while Google reads it in full and ignores the topics. Three things in this file
+still matter to that: a real `# Name` heading, one descriptive sentence above the badge
+row, and alt text on every image. `scripts/check-discovery.mjs` checks all of it.
+</discoverability>
 
 <relocation_rule>
 When an existing README is being slimmed, text that moves to the guide **moves

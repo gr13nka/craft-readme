@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>social preview card</title>
+<!--
+  The 1280x640 social preview. Driven by the query string so no file is written into the
+  target repo:
+
+    node <skill>/scripts/capture.mjs <skill>/templates/og-spec.json \
+      --set 'path=/og-card.html?title=NAME&slogan=THE%20SLOGAN' \
+      --set out=<abs path>/docs/images/og.png
+
+  Do not override `serve`: capture.mjs resolves it relative to the spec file, so the
+  default "." is already this directory. `out` resolves the same way, so pass it absolute
+  or as a path back into the target repo.
+
+  Params: title, slogan, footer, theme=dark|light, accent=RRGGBB.
+
+  Text only, on purpose. This card is rendered around 500px wide in a Slack or X feed,
+  where a shrunk screenshot is mush; a name and one line are what survive. It is also the
+  one image in this skill that keeps opaque corners — see references/media-rules.md.
+-->
+<style>
+  html, body { margin: 0; height: 100%; }
+  body {
+    width: 640px; height: 320px; overflow: hidden;
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 56px; box-sizing: border-box;
+    background: var(--bg); color: var(--fg);
+  }
+  :root { --bg: #0f1017; --fg: #f2f3f7; --muted: #9aa0b4; --accent: #6f6ac4; }
+  body.light { --bg: #ffffff; --fg: #12131a; --muted: #5c6270; }
+  /* A wash in the corner, so the card is not a flat rectangle at feed size. */
+  body::after {
+    content: ""; position: fixed; right: -140px; top: -140px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity: .30; pointer-events: none;
+  }
+  .rule { width: 56px; height: 5px; border-radius: 3px; background: var(--accent); margin-bottom: 26px; }
+  h1 {
+    margin: 0; font-size: 54px; line-height: 1.05; font-weight: 700;
+    letter-spacing: -0.022em; word-break: break-word;
+  }
+  h1.long { font-size: 42px; }
+  h1.longer { font-size: 34px; }
+  p {
+    margin: 18px 0 0; font-size: 23px; line-height: 1.36; color: var(--muted);
+    max-width: 30ch; font-weight: 400;
+  }
+  footer {
+    position: fixed; left: 56px; bottom: 34px;
+    font-size: 16px; color: var(--muted); letter-spacing: .01em;
+  }
+  body.has-footer { padding-bottom: 40px; }
+</style>
+<div class="rule"></div>
+<h1 id="t"></h1>
+<p id="s"></p>
+<footer id="f"></footer>
+<script>
+  const q = new URLSearchParams(location.search);
+  const title = q.get('title') || 'project';
+  const slogan = q.get('slogan') || '';
+  const footer = q.get('footer') || '';
+  if (q.get('theme') === 'light') document.body.classList.add('light');
+  if (q.get('accent')) document.documentElement.style.setProperty('--accent', '#' + q.get('accent').replace(/^#/, ''));
+
+  const t = document.getElementById('t');
+  t.textContent = title;
+  /* Step the title down rather than let a long name wrap into the slogan. */
+  if (title.length > 26) t.className = 'longer';
+  else if (title.length > 16) t.className = 'long';
+
+  const s = document.getElementById('s');
+  if (slogan) s.textContent = slogan; else s.remove();
+
+  const f = document.getElementById('f');
+  if (footer) { f.textContent = footer; document.body.classList.add('has-footer'); } else f.remove();
+</script>

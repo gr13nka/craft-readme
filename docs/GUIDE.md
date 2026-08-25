@@ -1,7 +1,8 @@
 # craft-readme — the full guide
 
 Everything the [README](../README.md) leaves out: how the skill routes, what each
-capture script does, the three checks that keep the output honest, and the voice.
+capture script does, the four checks that keep the output honest, the voice, and the
+fields that decide whether anyone finds the repo at all.
 
 - [Install](#install)
 - [How the skill works](#how-the-skill-works)
@@ -10,6 +11,7 @@ capture script does, the three checks that keep the output honest, and the voice
 - [The terminal card](#the-terminal-card)
 - [The checks](#the-checks)
 - [The voice](#the-voice)
+- [Being found](#being-found)
 - [What it enforces](#what-it-enforces)
 - [Requirements](#requirements)
 
@@ -110,6 +112,7 @@ still read as a terminal on any page. Never invent output — paste a real run o
 node scripts/check-readme.mjs README.md --docs docs
 node scripts/check-coverage.mjs --old <(git show HEAD:README.md) --new README.md --new docs/GUIDE.md
 node scripts/check-voice.mjs README.md
+node scripts/check-discovery.mjs README.md
 ```
 
 `check-readme` fails, with the exact line, on: a relative link or image whose target is
@@ -144,6 +147,17 @@ a Credits heading, and warns on a jab (nobody, you won't, dead, garbage). `deadp
 full set. The header names the register it used; an unmarked README lints as plain until it
 gets its marker, and the header says `(plain, no marker)`.
 
+`check-discovery` asks the question the other three do not: whether anyone arrives. In the
+file it checks the `# Name` heading (the README's first `#` is the repo page's only `<h1>`,
+and a header built from a centred logo image alone leaves the page without one), alt text on
+every image, and that the first sentences name the project. Over `gh` it checks the repo's
+description, its topics, the homepage and whether a custom social preview is set. Errors: no
+`<h1>`, an image with no `alt=`, an empty description, one over 350 characters, no topics, a
+topic that is not a valid slug. Warnings: a badge row above the first sentence, a topic
+almost nobody else uses, a missing social preview, a run-together repo name. `--no-remote`
+runs the file checks alone. The description is fed through `check-voice`'s own rules, in the
+register the README declares, because a description is prose too.
+
 ## The voice
 
 `references/voice.md`. Three registers over one core. The core is what keeps prose from
@@ -165,6 +179,35 @@ The prose rules live in `references/readme-anatomy.md`. The load-bearing one: a 
 earns its place only if it says something the image above it does not already show **and**
 something the reader can act on. A paragraph narrating a GIF is bloat. Reference detail —
 option tables, schemas, setup steps — belongs in this guide, not the README.
+
+## Being found
+
+`references/discoverability.md`. One fact reorders the rest: **GitHub's repo search does not
+read your README.** It covers the repository name, description and topics, unless the
+searcher types `in:readme`. **Google does read it**, in full, and ignores the topics. They
+are two different games, and the description is the only field that wins both — which is
+awkward, because it is the field most repos leave empty, and with it empty the page title,
+the meta description and every Slack and X preview fall back to "Contribute to owner/repo
+development by creating an account on GitHub".
+
+So the skill writes the description from the finished slogan (front-loaded — roughly the
+first 35 characters survive in a Google title after the `GitHub - owner/repo: ` prefix),
+picks five to twelve topics and verifies each is a slug other repos actually use, sets the
+homepage, and captures a 1280x640 social card. Topics match as exact atomic slugs: no
+stemming, no splitting, no prefix, so `command` never matches `command-line-tool` and an
+invented slug never fires.
+
+Moving reference detail into this guide costs nothing here. A `blob` page like this one is
+separately indexable by Google; it keeps the README short without hiding the content.
+
+What the skill will not do: stuff keywords (GitHub's search never reads the README, and
+Google demotes it), hide text (GitHub strips HTML comments from the rendered DOM and
+sanitises `style`, so it cannot be done), or chase image filenames (`/raw/` is blocked in
+robots.txt and external images are proxied through hashed camo URLs — alt text is the only
+description of an image that survives). Two things it names but leaves to you: pinning the
+repo on your profile, and getting listed on the relevant awesome-list. github.com publishes
+no sitemap and a profile page links only pinned repos, so for an unlinked repo pinning is
+the difference between one crawl path and none.
 
 ## Requirements
 

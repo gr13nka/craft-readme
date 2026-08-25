@@ -10,6 +10,8 @@ skill itself, `references/` is its README-authoring knowledge.
   body. Intake asks nothing on an **explicit** invocation (build by default); it asks only
   when the skill auto-triggered from a README mention.
 - `workflows/` FOLLOW · `references/` READ · `templates/` COPY+FILL · `scripts/` EXECUTE.
+- The skill mutates exactly one thing outside the working tree: `gh repo edit`, in
+  `workflows/discoverability.md`. It still never commits.
 - The slash command lives **outside this repo** at `~/.claude/commands/craft-readme.md` and
   is not bundled. It carries the "explicit invocation, skip intake" signal. Editing the
   skill does not touch it.
@@ -57,6 +59,23 @@ animation — `du -h` block-rounding lies. `check-coverage.mjs` matches exact su
 reworded line during a move flags as "lost"; that is expected — verify the fact survives and
 pass `--allow`.
 
+**The social card is the one image that keeps opaque corners.** Everything else here has
+its corners cut to alpha 0 so it sits on the reader's GitHub theme. `templates/og-spec.json`
+carries no `radius` key on purpose — Slack, X and LinkedIn composite the card onto their own
+background, where a transparent corner goes black or white. Its budget is 1 MB, not 1.5 MB,
+because that is GitHub's limit for the upload. `capture.mjs` resolves `serve` and `out`
+**relative to the spec file**, not the cwd, so the spec's `"serve": "."` already means
+`templates/` — overriding it is the way to get a 404 that still passes every size check.
+
+**Discoverability is a separate question from the README, and the answer is counterintuitive.**
+GitHub's repo search does not read the README (name, description and topics only); Google
+reads the README and ignores the topics. So `check-discovery.mjs` splits from
+`check-readme.mjs` — that script's header promises no network, and the fields worth checking
+need `gh`. It reuses `checkVoiceText` from `check-voice.mjs` (extracted from `checkVoice` for
+exactly this) to lint the repo description in the README's own register. Topics match as
+exact atomic slugs, so the script verifies each one has other repos behind it rather than
+trusting it looks plausible.
+
 **Voice is part of the skill.** The READMEs it writes, and this repo's own, follow
 `references/voice.md`: three registers (plain, deadpan, quiet) over one core, none of the
 machine tells, no emoji, no `!`, no labelled joke. A README declares its register on line 1
@@ -71,8 +90,9 @@ when editing them.
 ## Verify
 
 No test suite. `node --check scripts/*.mjs`, then run the skill's own gates on itself:
-`node scripts/check-readme.mjs README.md --docs docs` and `node scripts/check-voice.mjs
-README.md` (the header must read `(deadpan)`, from the marker). When touching
+`node scripts/check-readme.mjs README.md --docs docs`, `node scripts/check-voice.mjs
+README.md` (the header must read `(deadpan)`, from the marker), and `node
+scripts/check-discovery.mjs README.md` (`--no-remote` when `gh` is unavailable). When touching
 `check-voice.mjs`, run fixtures under all three `--voice` values: a machine-written paragraph
 errors in each, a ripgrep-style paragraph passes plain with warnings only, a jab warns under
 quiet only. Smoke-test a capture against any

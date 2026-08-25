@@ -16,7 +16,10 @@ what the project is and how it runs, in this order — stop at the first hit:
 CLAUDE.md's command list → `package.json` (`scripts.dev`/`start`, `bin`) → a root
 `index.html` (a static site → serve `./`) → `pyproject.toml [project.scripts]` →
 `Cargo.toml [[bin]]` → electron/tauri deps (a desktop app). Ambiguous after that
-→ ask once. Get owner/repo from `git remote get-url origin`.
+→ ask once. Get owner/repo from `git remote get-url origin`, and read the repo's own
+discovery fields while you are there — `gh repo view --json
+description,repositoryTopics,homepageUrl,usesCustomOpenGraphImage`. Blank ones are
+filled in step 9; a field a human already set is not overwritten without saying so.
 
 Classify the surface, because it decides how media is made: **web** (has a URL or
 a static root), **CLI** (has a `bin`/console entry point), or **other** (desktop
@@ -88,8 +91,19 @@ with the limit conceded in plain and quiet.
 Follow `workflows/tighten-prose.md`, then return here.
 </step_8>
 
-<step_9 name="Verify">
+<step_9 name="Set the discovery surfaces">
+Follow `workflows/discoverability.md`, then return here. It writes the repo description,
+the topics and the homepage from the finished slogan, captures the 1280x640 social card,
+and names the two one-click actions this skill cannot do itself.
+
+It runs **after** the tighten pass, because the description is derived from the slogan and
+the tighten pass can still change the slogan. Nothing here edits README prose.
+</step_9>
+
+<step_10 name="Verify">
 - `node <skill>/scripts/check-readme.mjs README.md --docs docs` → exit 0
+- `node <skill>/scripts/check-discovery.mjs README.md` → exit 0. Alt text, the `# Name`
+  heading, and the repo's own description and topics. `--no-remote` when `gh` is absent
 - `node <skill>/scripts/check-voice.mjs README.md` → exit 0. It reads the register
   from the marker and names it in the header; `(plain, no marker)` means the
   marker is missing, add it. Every warning a stated call, not a silent pass
@@ -100,12 +114,12 @@ Follow `workflows/tighten-prose.md`, then return here.
   entrance) and the GIF completes its motion and loops
 - add or keep one line in CLAUDE.md: "README is the landing page; depth lives in
   docs/GUIDE.md" — so a later /finish-session routes doc edits to the guide
-</step_9>
+</step_10>
 
-<step_10 name="Hand off">
+<step_11 name="Hand off">
 List the changed and new files. Say: **ready — run `/finish-session`** to
 document, verify and commit. This skill does not commit.
-</step_10>
+</step_11>
 
 </process>
 
@@ -113,7 +127,8 @@ document, verify and commit. This skill does not commit.
 - README ≤ ~100 lines, sections in the canonical order, animated demo under the header
 - at least one still and one animation in `docs/images/`, transparent corners, within budget
 - full reference content lives in `docs/GUIDE.md`, reached by anchor links
-- check-readme and check-voice clean, in the README's declared register;
-  check-coverage clean in restructure mode
+- check-readme, check-voice and check-discovery clean, in the README's declared
+  register; check-coverage clean in restructure mode
+- description, topics and social card set; the manual upload and the two one-clicks stated
 - nothing committed; the closing message points at /finish-session
 </success_criteria>

@@ -1,0 +1,11 @@
+{
+  "_": "The 1280x640 social preview card. Override serve/path/out; the rest is fixed.",
+  "_serve": "Leave it. capture.mjs resolves serve/out relative to THIS FILE's directory, so \".\" is the templates dir where og-card.html sits — not the target repo.",
+  "_path": "og-card.html with the text in the query string; url-encode the spaces (%20)",
+  "_radius": "Deliberately absent. This card is opaque and full-bleed — Slack, X and LinkedIn composite it onto their own background, where a transparent corner goes black or white.",
+  "serve": ".",
+  "path": "/og-card.html?title=project&slogan=what+it+is",
+  "viewport": { "width": 640, "height": 320, "dsf": 2 },
+  "settle": 600,
+  "out": "docs/images/og.png"
+}

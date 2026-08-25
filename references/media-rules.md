@@ -19,6 +19,27 @@ to alpha 0 with a one-pixel antialiased edge. The image then sits on any theme.
 Check a new shot on both `#ffffff` and `#0d1117` before trusting it.
 </transparent_corners>
 
+<social_card>
+**The one image that keeps its corners.** The 1280x640 social preview is opaque and
+full-bleed — no rounding, no alpha. Every other image here has its corners cut to alpha 0
+so it sits on the reader's GitHub theme; this one is never composited onto a GitHub page.
+Slack, X and LinkedIn draw it on their own background, and a transparent corner there
+resolves to black or white depending on the client and the viewer's theme, which is the
+one thing the transparent-corner rule exists to prevent.
+
+`templates/og-spec.json` therefore carries no `radius` key, and `capture.mjs` skips
+rounding when it is absent. Budget is **1 MB**, tighter than a still's 1.5 MB, because
+that is GitHub's own limit for the upload. Documented best-display size is 1280x640;
+the minimum it accepts is 640x320, and it re-encodes the upload to JPEG at 1200x630.
+
+Text only, and that is a decision rather than a shortcut: the card renders around 500px
+wide in a feed, where a shrunk screenshot is mush. The name and one line survive.
+Upload is manual, and unavoidably so: there is no API. `UpdateRepositoryInput` has no
+field for it, `openGraphImageUrl` is read-only, and REST ignores it. Open the settings
+page and reveal the file (`gh browse --settings`, `open -R docs/images/og.png`) so it is
+a drag-and-drop, and let the user confirm before calling it done.
+</social_card>
+
 <formats>
 - **Stills**: PNG, RGBA. Full alpha, so the corners are clean.
 - **Animation**: GIF by default. Its alpha is one bit, so a rounded corner is a
